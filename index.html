@@ -8,6 +8,14 @@
   <link rel="icon" href="data:," />
   <title>SiliconDV | Practical design verification</title>
   <meta name="description" content="Practical, open learning notes for SystemVerilog, UVM, assertions, coverage, CDC and verification strategy." />
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-796B4SJDY9"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-796B4SJDY9');
+  </script>
   <style>
     :root {
       color-scheme: light;
@@ -47,7 +55,7 @@
       font-kerning: normal;
     }
     a { color: inherit; }
-    button, input { font: inherit; }
+    button, input, textarea { font: inherit; }
     button { color: inherit; }
     svg { display: block; }
     .skip-link {
@@ -328,6 +336,22 @@
     .about-aside { margin-top: 30px; padding: 21px 23px; background: var(--accent-soft); border-top: 1px solid var(--signal); }
     .about-aside strong { font: 500 1.15rem var(--serif); }
     .about-aside p { margin: 8px 0 0; font-size: .9rem; }
+    .contact-layout { display: grid; grid-template-columns: minmax(0, .72fr) minmax(340px, 1.28fr); gap: clamp(38px, 8vw, 100px); align-items: start; }
+    .contact-intro h2 { margin: 0; font: 500 clamp(2.3rem, 5vw, 4.25rem)/1.04 var(--serif); letter-spacing: -.035em; }
+    .contact-intro p { margin: 22px 0 0; max-width: 470px; color: var(--muted); }
+    .contact-note { margin-top: 30px; padding: 18px 20px; border-top: 1px solid var(--signal); background: var(--accent-soft); color: var(--accent-strong); font: italic 500 1rem/1.55 var(--serif); }
+    .contact-form { display: grid; gap: 20px; padding: clamp(25px, 4vw, 42px); border: 1px solid var(--signal); background: color-mix(in srgb, var(--surface) 80%, transparent); box-shadow: var(--shadow); }
+    .form-field { display: grid; gap: 8px; }
+    .form-field label { color: var(--accent); font-size: .69rem; font-weight: 750; letter-spacing: .12em; text-transform: uppercase; }
+    .form-field input, .form-field textarea { width: 100%; border: 1px solid var(--line); border-radius: 0; background: var(--bg); color: var(--ink); padding: 13px 14px; outline: none; }
+    .form-field input { min-height: 49px; }
+    .form-field textarea { min-height: 164px; resize: vertical; line-height: 1.6; }
+    .form-field input:focus, .form-field textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 13%, transparent); }
+    .contact-form .button { justify-self: start; margin-top: 4px; }
+    .contact-fine-print { margin: -6px 0 0; color: var(--muted); font-size: .8rem; }
+    .contact-thanks { padding: clamp(30px, 6vw, 56px); border-top: 1px solid var(--signal); border-bottom: 1px solid var(--line); background: var(--accent-soft); }
+    .contact-thanks strong { display: block; font: 500 clamp(1.8rem, 4vw, 3rem)/1.08 var(--serif); color: var(--accent-strong); }
+    .contact-thanks p { margin: 12px 0 0; color: var(--muted); }
     .subtle-link { color: var(--accent); font-weight: 750; text-underline-offset: 4px; }
     .page-panel[hidden], .page-trail[hidden] { display: none !important; }
     .page-trail {
@@ -350,7 +374,7 @@
       color: var(--ink); text-decoration: none; background: color-mix(in srgb, var(--surface) 78%, transparent);
       border-top: 1px solid var(--signal); border-right: 1px solid var(--line); border-bottom: 1px solid var(--line);
     }
-    .topic-card:nth-child(1), .topic-card:nth-child(5) { grid-column: span 6; }
+    .topic-card:nth-child(1), .topic-card:nth-child(5), .topic-card:nth-child(7), .topic-card:nth-child(8) { grid-column: span 6; }
     .topic-card::after {
       content: var(--card-number); position: absolute; right: 16px; top: 4px;
       color: color-mix(in srgb, var(--signal) 14%, transparent); font: 500 5.5rem/.9 var(--serif); pointer-events: none;
@@ -369,7 +393,7 @@
     .toast.show { opacity: 1; transform: translate(-50%, 0); }
     :focus-visible { outline: 3px solid color-mix(in srgb, var(--accent) 55%, transparent); outline-offset: 3px; }
     @media (max-width: 900px) {
-      .hero, .featured, .section-head, .article-body, .practice-grid, .about, .curriculum-intro { grid-template-columns: 1fr; }
+      .hero, .featured, .section-head, .article-body, .practice-grid, .about, .curriculum-intro, .contact-layout { grid-template-columns: 1fr; }
       .roadmap > li { grid-template-columns: 52px minmax(190px, .7fr) minmax(0, 1.3fr); }
       .hero { padding-top: 72px; }
       .hero-diagram { max-width: 520px; transform: none; }
@@ -519,7 +543,9 @@
     .section[aria-label="Practice method"]::before { content: "Practice loop"; }
     .section[aria-label="Practice method"]::after { content: "08 / 09"; }
     #about::before { content: "About"; }
-    #about::after { content: "09 / 09"; }
+    #about::after { content: "09 / 10"; }
+    #contact::before { content: "Write to me"; }
+    #contact::after { content: "10 / 10"; }
     .section-head, .curriculum-intro { margin-bottom: 54px; }
     .section-head h2, .curriculum-intro h2, .featured h2, .practice-note h2, .about h2 { font-weight: 500; line-height: 1.02; letter-spacing: -.03em; }
     .section-head p, .curriculum-intro p { line-height: 1.78; }
@@ -722,7 +748,7 @@
       .topic-index { padding: 54px 0 76px; }
       .topic-index-head { gap: 18px; margin-bottom: 34px; }
       .topic-index-grid { grid-template-columns: 1fr; }
-      .topic-card, .topic-card:nth-child(1), .topic-card:nth-child(5) { grid-column: auto; min-height: 220px; }
+      .topic-card, .topic-card:nth-child(1), .topic-card:nth-child(5), .topic-card:nth-child(7), .topic-card:nth-child(8) { grid-column: auto; min-height: 220px; }
       .topic-card::after { font-size: 4.5rem; }
       .page-trail { margin-top: 24px; }
       nav a { font-size: .63rem; }
@@ -892,6 +918,11 @@
           <span class="topic-card-number">The person behind the notes</span><h2>About</h2>
           <p>Meet Abinaya and read why SiliconDV is built around intent, failure modes and evidence instead of definitions alone.</p>
           <span class="topic-card-action">Read the story</span>
+        </a>
+        <a class="topic-card" href="#contact" style="--card-number:'08'">
+          <span class="topic-card-number">Start a conversation</span><h2>Contact</h2>
+          <p>Have a verification question, a topic you want me to cover or an idea worth discussing? Send me a note.</p>
+          <span class="topic-card-action">Write to me</span>
         </a>
       </div>
     </section>
@@ -1347,6 +1378,42 @@ a_req_gets_grant:
         </div>
       </div>
     </section>
+
+    <section class="section page-panel" id="contact" data-page="contact" aria-labelledby="contact-title" hidden>
+      <div class="contact-layout">
+        <div class="contact-intro">
+          <h2 id="contact-title">Let’s talk verification.</h2>
+          <p>If you have a question about something on SiliconDV, a topic you would like me to explain or an idea for the community, send me a note. I read every message myself.</p>
+          <p class="contact-note">A clear question is always welcome. Tell me what you are working on and where you are stuck.</p>
+        </div>
+        <div>
+          <form class="contact-form" id="contact-form" action="https://formsubmit.co/abiamra98@gmail.com" method="POST" target="contact-response">
+            <input type="hidden" name="_subject" value="New message from SiliconDV site" />
+            <input type="hidden" name="_template" value="table" />
+            <input type="hidden" name="_captcha" value="false" />
+            <div class="form-field">
+              <label for="contact-name">Your name</label>
+              <input id="contact-name" name="name" type="text" autocomplete="name" required />
+            </div>
+            <div class="form-field">
+              <label for="contact-email">Your email</label>
+              <input id="contact-email" name="email" type="email" autocomplete="email" required />
+            </div>
+            <div class="form-field">
+              <label for="contact-message">What would you like to talk about?</label>
+              <textarea id="contact-message" name="message" required></textarea>
+            </div>
+            <button class="button primary" id="contact-submit" type="submit">Send your note</button>
+            <p class="contact-fine-print">Your message will go directly to my SiliconDV inbox.</p>
+          </form>
+          <div class="contact-thanks" id="contact-thanks" role="status" tabindex="-1" hidden>
+            <strong>Thank you for writing.</strong>
+            <p>Your note is on its way to my inbox. I will read it as soon as I can.</p>
+          </div>
+          <iframe name="contact-response" id="contact-response" title="Contact form response" hidden></iframe>
+        </div>
+      </div>
+    </section>
   </main>
 
   <footer>
@@ -1369,7 +1436,8 @@ a_req_gets_grant:
         library: 'Library',
         reference: 'Quick Reference',
         practice: 'Practice Workshop',
-        about: 'About'
+        about: 'About',
+        contact: 'Contact'
       };
       var anchorPages = {
         paths: 'start', beginner: 'start',
@@ -1520,6 +1588,23 @@ a_req_gets_grant:
           var revealed = card.getAttribute('aria-pressed') === 'true';
           card.setAttribute('aria-pressed', revealed ? 'false' : 'true');
         });
+      });
+
+      var contactForm = document.getElementById('contact-form');
+      var contactSubmit = document.getElementById('contact-submit');
+      var contactResponse = document.getElementById('contact-response');
+      var contactThanks = document.getElementById('contact-thanks');
+      var contactWasSubmitted = false;
+      contactForm.addEventListener('submit', function () {
+        contactWasSubmitted = true;
+        contactSubmit.disabled = true;
+        contactSubmit.textContent = 'Sending…';
+      });
+      contactResponse.addEventListener('load', function () {
+        if (!contactWasSubmitted) return;
+        contactForm.hidden = true;
+        contactThanks.hidden = false;
+        contactThanks.focus();
       });
 
       var doodle = document.getElementById('doodle-testbench');
