@@ -1,0 +1,1543 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="color-scheme" content="light" />
+  <meta name="theme-color" content="#f4eddf" />
+  <link rel="icon" href="data:," />
+  <title>SiliconDV | Practical design verification</title>
+  <meta name="description" content="Practical, open learning notes for SystemVerilog, UVM, assertions, coverage, CDC and verification strategy." />
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f8f1f3;
+      --surface: #fffdfc;
+      --surface-2: #efe1e5;
+      --ink: #2d2024;
+      --muted: #705b61;
+      --line: #d5bec5;
+      --accent: #7b3045;
+      --accent-strong: #572132;
+      --accent-soft: #ecd7dd;
+      --signal: #a76846;
+      --code-bg: #291d21;
+      --code-ink: #f7edef;
+      --shadow: 0 18px 46px rgba(75, 39, 49, .10);
+      --radius-sm: 5px;
+      --radius-md: 9px;
+      --radius-lg: 14px;
+      --serif: Baskerville, "Iowan Old Style", "Palatino Linotype", Georgia, serif;
+      --sans: "Gill Sans", "Avenir Next", Avenir, Candara, sans-serif;
+      --mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background-color: var(--bg);
+      background-image:
+        repeating-linear-gradient(0deg, transparent 0, transparent 31px, color-mix(in srgb, var(--accent) 3.5%, transparent) 32px),
+        repeating-linear-gradient(90deg, transparent 0, transparent 31px, color-mix(in srgb, var(--accent) 2.5%, transparent) 32px);
+      color: var(--ink);
+      font-family: var(--sans);
+      font-size: 16px;
+      line-height: 1.7;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    a { color: inherit; }
+    button, input { font: inherit; }
+    button { color: inherit; }
+    svg { display: block; }
+    .skip-link {
+      position: fixed; left: 1rem; top: -4rem; z-index: 100;
+      padding: .7rem 1rem; background: var(--ink); color: var(--bg);
+      border-radius: var(--radius-sm);
+    }
+    .skip-link:focus { top: 1rem; }
+    .topbar {
+      position: sticky; top: 0; z-index: 20;
+      background: color-mix(in srgb, var(--bg) 88%, transparent);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid color-mix(in srgb, var(--line) 72%, transparent);
+    }
+    .topbar-inner {
+      width: min(1160px, calc(100% - 40px)); margin: auto;
+      min-height: 60px; display: flex; align-items: center; justify-content: space-between; gap: 20px;
+    }
+    .topic-label {
+      display: flex; align-items: center; gap: 11px; font-family: var(--serif); font-weight: 600; letter-spacing: .01em;
+    }
+    .topic-label span:first-child {
+      width: 11px; height: 11px; border: 1px solid var(--accent); background: var(--accent-soft); transform: rotate(45deg);
+    }
+    nav { display: flex; align-items: center; gap: 24px; }
+    nav a { text-decoration: none; color: var(--muted); font-size: .92rem; font-weight: 650; }
+    nav a:hover, nav a:focus-visible, nav a[aria-current="page"] { color: var(--accent); }
+    nav a[aria-current="page"] { text-decoration: underline; text-underline-offset: 5px; text-decoration-color: var(--signal); }
+    .hero {
+      width: min(1160px, calc(100% - 40px)); margin: 0 auto;
+      display: grid; grid-template-columns: minmax(0, 1.28fr) minmax(300px, .72fr);
+      gap: clamp(36px, 7vw, 96px); padding: clamp(64px, 10vw, 122px) 0 70px;
+      align-items: center;
+    }
+    .eyebrow { color: var(--accent-strong); font-family: var(--serif); font-style: italic; font-weight: 500; margin: 0 0 16px; font-size: 1.02rem; }
+    h1 {
+      font-family: var(--serif); font-weight: 500; letter-spacing: -.025em;
+      line-height: 1.02; font-size: clamp(3rem, 7.4vw, 6.2rem); margin: 0; max-width: 860px;
+    }
+    .hero-copy { font-size: clamp(1.05rem, 2vw, 1.28rem); color: var(--muted); max-width: 650px; margin: 28px 0 0; }
+    .hero-actions { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 32px; }
+    .button {
+      display: inline-flex; align-items: center; justify-content: center; gap: 9px;
+      min-height: 46px; padding: 0 18px; border: 1px solid var(--accent); text-decoration: none;
+      font-weight: 750; border-radius: var(--radius-sm); cursor: pointer;
+    }
+    .button.primary { background: var(--accent); color: #fff; }
+    .button.secondary { color: var(--accent-strong); background: transparent; }
+    .button:hover { filter: brightness(.96); }
+    .hero-diagram {
+      background-color: var(--surface);
+      background-image: repeating-linear-gradient(135deg, color-mix(in srgb, var(--accent) 3.5%, transparent) 0 1px, transparent 1px 9px);
+      border: 1px solid var(--line); border-radius: var(--radius-lg);
+      padding: 24px; box-shadow: var(--shadow); transform: rotate(.45deg);
+    }
+    .diagram-top { display: flex; justify-content: space-between; align-items: center; font: 700 .74rem var(--mono); color: var(--muted); margin-bottom: 18px; }
+    .status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--signal); box-shadow: 0 0 0 4px color-mix(in srgb, var(--signal) 18%, transparent); }
+    .flow { display: grid; gap: 11px; }
+    .flow-row { display: grid; grid-template-columns: 58px 1fr; align-items: center; gap: 12px; }
+    .flow-n { font: 700 .76rem var(--mono); color: var(--accent); }
+    .flow-box { border: 1px solid var(--line); background: var(--bg); padding: 12px 14px; border-radius: var(--radius-sm); font-size: .9rem; font-weight: 700; }
+    .flow-arrow { width: 1px; height: 10px; background: var(--line); margin-left: 28px; }
+    .signal-strip { margin-top: 19px; padding-top: 17px; border-top: 1px solid var(--line); }
+    .signal-strip svg { width: 100%; height: 60px; color: var(--accent); }
+    .section { width: min(1160px, calc(100% - 40px)); margin: 0 auto; padding: 82px 0; }
+    .section + .section { border-top: 1px solid var(--line); }
+    .chapter-mark { position: absolute; right: 18px; top: 84px; color: color-mix(in srgb, var(--signal) 13%, transparent); font: 500 clamp(4.5rem, 11vw, 9rem)/.8 var(--serif); letter-spacing: -.07em; pointer-events: none; user-select: none; }
+    .circuit-rule { width: min(280px, 45%); height: 28px; margin: 0 0 31px auto; color: var(--signal); opacity: .78; }
+    .circuit-rule path, .circuit-rule circle { vector-effect: non-scaling-stroke; }
+    .margin-note { position: relative; max-width: 340px; margin: 24px 0 0 auto; padding: 13px 16px 13px 22px; color: var(--accent); font: italic 500 .92rem/1.55 var(--serif); transform: rotate(-.7deg); }
+    .margin-note::before { content: ""; position: absolute; left: 0; top: 7px; bottom: 7px; width: 9px; border-left: 1px solid var(--signal); border-top: 1px solid var(--signal); border-bottom: 1px solid var(--signal); }
+    .drop-cap::first-letter { float: left; margin: .08em .12em 0 0; color: #d6b264; font: 500 4.7rem/.72 var(--serif); }
+    .section-head { display: grid; grid-template-columns: minmax(0, 1fr) minmax(260px, .55fr); gap: 32px; align-items: end; margin-bottom: 42px; }
+    .section-head h2 { margin: 0; font: 500 clamp(2.2rem, 5vw, 4.25rem)/1.05 var(--serif); letter-spacing: -.035em; }
+    .section-head p { margin: 0; color: var(--muted); }
+    .path-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+    .path-card {
+      position: relative; min-height: 290px; padding: 24px; background: var(--surface);
+      border: 1px solid var(--line); border-radius: var(--radius-md); display: flex; flex-direction: column;
+    }
+    .path-card:nth-child(2) { margin-top: 26px; }
+    .path-card:nth-child(3) { margin-top: 52px; }
+    .path-card:nth-child(4) { margin-top: 78px; }
+    .path-num { font: italic 600 .92rem var(--serif); color: var(--accent); }
+    .path-card h3 { margin: 22px 0 10px; font: 500 1.55rem/1.12 var(--serif); }
+    .path-card p { color: var(--muted); margin: 0; font-size: .95rem; }
+    .path-card ul { list-style: none; padding: 0; margin: auto 0 0; font-size: .86rem; color: var(--muted); }
+    .path-card li { border-top: 1px solid var(--line); padding-top: 8px; margin-top: 8px; }
+    .curriculum-intro {
+      display: grid; grid-template-columns: minmax(0, .62fr) minmax(0, 1.38fr); gap: clamp(30px, 7vw, 88px);
+      align-items: start; margin-bottom: 42px;
+    }
+    .curriculum-intro h2 { margin: 0; font: 500 clamp(2.35rem, 5vw, 4.4rem)/1.04 var(--serif); letter-spacing: -.035em; }
+    .curriculum-intro p { margin: 8px 0 0; color: var(--muted); font-size: 1.08rem; }
+    .roadmap { list-style: none; padding: 0; margin: 0; counter-reset: module; border-top: 1px solid var(--line); }
+    .roadmap > li {
+      counter-increment: module; display: grid; grid-template-columns: 70px minmax(210px, .62fr) minmax(0, 1.38fr);
+      gap: clamp(20px, 4vw, 54px); padding: 30px 0; border-bottom: 1px solid var(--line); align-items: start;
+    }
+    .roadmap > li::before { content: counter(module, decimal-leading-zero); font: 700 .8rem var(--mono); color: var(--signal); padding-top: 6px; }
+    .module-title h3 { margin: 0; font: 500 clamp(1.4rem, 2.5vw, 2rem)/1.14 var(--serif); }
+    .module-title p { color: var(--accent); font-weight: 700; font-size: .82rem; margin: 8px 0 0; }
+    .module-body > p { color: var(--muted); margin: 0 0 13px; }
+    .module-body ol { margin: 0; padding-left: 1.2rem; }
+    .module-body li { padding-left: .25rem; }
+    .module-body li + li { margin-top: 5px; }
+    .recommended { margin-top: 16px; padding: 12px 14px; background: var(--accent-soft); border-radius: var(--radius-sm); font-size: .9rem; }
+    .recommended strong { margin-right: 6px; }
+    .recommended a { color: var(--accent-strong); font-weight: 750; text-underline-offset: 3px; }
+    .curriculum-next {
+      margin-top: 34px; display: flex; justify-content: space-between; gap: 24px; align-items: center;
+      padding: 24px 0 0; color: var(--muted);
+    }
+    .curriculum-next p { margin: 0; max-width: 650px; }
+    .featured {
+      background-color: var(--accent-strong); color: #fff8fa; border: 1px solid color-mix(in srgb, var(--accent-strong) 72%, #000); border-radius: var(--radius-lg); padding: clamp(28px, 6vw, 68px);
+      background-image:
+        repeating-linear-gradient(45deg, rgba(255,255,255,.025) 0 1px, transparent 1px 8px),
+        repeating-linear-gradient(-45deg, rgba(255,255,255,.018) 0 1px, transparent 1px 8px);
+      display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(280px, .95fr); gap: clamp(36px, 7vw, 82px); align-items: start;
+    }
+    .featured .kicker { font: italic 500 .96rem var(--serif); color: var(--signal); }
+    .featured h2 { font: 500 clamp(2.3rem, 5vw, 4.5rem)/1.02 var(--serif); letter-spacing: -.035em; margin: 16px 0 22px; }
+    .featured > div > p { opacity: .76; max-width: 580px; margin: 0; }
+    .framework { counter-reset: steps; display: grid; }
+    .framework div { counter-increment: steps; display: grid; grid-template-columns: 38px 1fr; gap: 15px; padding: 15px 0; border-bottom: 1px solid color-mix(in srgb, currentColor 22%, transparent); }
+    .framework div::before { content: "0" counter(steps); font: 700 .76rem var(--mono); color: var(--signal); padding-top: 3px; }
+    .framework strong { display: block; }
+    .framework span { display: block; opacity: .74; font-size: .9rem; margin-top: 4px; line-height: 1.55; }
+    .framework em { display: block; margin-top: 7px; color: #f2d9ac; font: 500 .82rem/1.5 var(--serif); }
+    .worked-case { margin-top: 25px; padding-top: 19px; border-top: 1px solid color-mix(in srgb, currentColor 22%, transparent); }
+    .worked-case strong { display: block; color: #d6b264; font: 700 .68rem/1.5 var(--sans); letter-spacing: .16em; text-transform: uppercase; }
+    .worked-case p { margin: 7px 0 0; color: #f5e9e7; font-size: .92rem; line-height: 1.66; }
+    .framework-takeaway { grid-column: 1 / -1; margin: 0; padding: 19px 0 0; border-top: 1px solid color-mix(in srgb, currentColor 22%, transparent); color: #f5e9e7; font-size: .93rem; }
+    .framework-takeaway strong { color: #d6b264; }
+    .search-panel { background: var(--surface-2); border-radius: var(--radius-lg); padding: clamp(24px, 4vw, 40px); }
+    .search-row { display: grid; grid-template-columns: 1fr auto; gap: 12px; }
+    .search-wrap { position: relative; }
+    .search-wrap svg { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); width: 20px; color: var(--muted); }
+    .search-wrap input {
+      width: 100%; min-height: 50px; border: 1px solid var(--line); background: var(--surface); color: var(--ink);
+      border-radius: var(--radius-sm); padding: 0 16px 0 46px; outline: none;
+    }
+    .search-wrap input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+    .filters { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
+    .filter {
+      border: 1px solid var(--line); border-radius: 999px; padding: 7px 12px; background: var(--surface); cursor: pointer;
+      font-size: .86rem; color: var(--muted);
+    }
+    .filter[aria-pressed="true"] { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+    .library { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 28px; }
+    .resource {
+      background: var(--surface); border: 1px solid var(--line); padding: 24px; border-radius: var(--radius-md);
+      min-height: 250px; display: flex; flex-direction: column;
+    }
+    .resource:nth-child(2), .resource:nth-child(5) { background: color-mix(in srgb, var(--accent-soft) 42%, var(--surface)); }
+    .resource:nth-child(3) { transform: translateY(18px); }
+    .resource:nth-child(5) { transform: translateY(-12px); }
+    .resource[hidden] { display: none; }
+    .resource-meta { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; font: 700 .72rem var(--mono); color: var(--accent); }
+    .resource-meta span + span::before { content: "/"; color: var(--line); margin-right: 8px; }
+    .resource h3 { margin: 18px 0 10px; font: 500 1.45rem/1.14 var(--serif); }
+    .resource p { margin: 0; color: var(--muted); font-size: .93rem; }
+    .resource p + p { margin-top: 11px; }
+    .resource-example { margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--line); }
+    .resource-example strong, .resource-takeaway strong { color: var(--ink); font-size: .78rem; letter-spacing: .05em; }
+    .resource-takeaway { margin-top: 10px; color: var(--accent-strong); font: italic 500 .9rem/1.5 var(--serif); }
+    .resource a { margin-top: auto; padding-top: 22px; color: var(--accent-strong); font-weight: 750; text-underline-offset: 4px; }
+    .empty { text-align: center; color: var(--muted); padding: 34px 10px 4px; }
+    .article-stack { display: grid; gap: 10px; }
+    .article { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-md); overflow: clip; }
+    .article:nth-child(even) { margin-left: clamp(0px, 4vw, 48px); }
+    .article-heading { padding: 21px 24px; display: grid; grid-template-columns: 1fr auto; gap: 20px; align-items: center; border-bottom: 1px solid var(--line); border-left: 3px solid var(--signal); }
+    
+    
+    .article-heading strong { font: 500 1.25rem var(--serif); }
+    .article-heading span { color: var(--accent); font: 700 .82rem var(--mono); }
+    
+    .article-body { padding: 26px 24px 30px; display: grid; grid-template-columns: .58fr 1fr; gap: 34px; }
+    .article-body > p { color: var(--muted); margin-top: 0; }
+    .article-body ol, .article-body ul { margin-top: 0; }
+    .article-body li + li { margin-top: 8px; }
+    .reference-copy p { margin: 0; color: var(--muted); }
+    .reference-copy p + p { margin-top: 12px; }
+    .reference-copy h4 { margin: 21px 0 8px; font: 500 1.12rem/1.25 var(--serif); color: var(--ink); }
+    .reference-copy ul, .reference-copy ol { padding-left: 1.15rem; color: var(--muted); }
+    .reference-copy li + li { margin-top: 7px; }
+    .mini-example { padding: 16px 18px; background: var(--accent-soft); border-top: 1px solid var(--signal); color: var(--ink); font-size: .9rem; }
+    .mini-example strong { font-family: var(--serif); font-size: 1rem; }
+    .key-takeaway { margin-top: 18px; padding-top: 13px; border-top: 1px solid var(--line); color: var(--accent-strong); font: italic 500 .98rem/1.55 var(--serif); }
+    .code-block { position: relative; background: var(--code-bg); color: var(--code-ink); border-radius: var(--radius-sm); padding: 22px; overflow: auto; }
+    .code-block pre { margin: 0; font: .84rem/1.62 var(--mono); white-space: pre-wrap; overflow-wrap: anywhere; }
+    .copy-btn { position: absolute; right: 9px; top: 9px; border: 1px solid #745461; color: #f5e8ec; background: #3b2730; border-radius: 4px; padding: 5px 8px; font-size: .72rem; cursor: pointer; }
+    .practice-grid { display: grid; grid-template-columns: .82fr 1.18fr; gap: 20px; }
+    .practice-note { position: relative; background: var(--accent-soft); border-radius: var(--radius-lg); padding: clamp(28px, 5vw, 50px); overflow: hidden; }
+    .practice-note::after { content: ""; position: absolute; right: -24px; bottom: 16px; width: 150px; height: 72px; border-top: 1px solid color-mix(in srgb, var(--accent) 32%, transparent); border-bottom: 1px solid color-mix(in srgb, var(--accent) 22%, transparent); transform: rotate(-6deg); }
+    .practice-note h2 { margin: 0 0 16px; font: 500 clamp(2rem, 4vw, 3.4rem)/1.05 var(--serif); letter-spacing: -.03em; }
+    .practice-note p { position: relative; z-index: 1; color: var(--muted); }
+    .loop { display: grid; gap: 10px; }
+    .loop-item:nth-child(odd) { margin-right: clamp(0px, 3vw, 32px); }
+    .loop-item:nth-child(even) { margin-left: clamp(0px, 3vw, 32px); }
+    .loop-item { display: grid; grid-template-columns: 44px 1fr; gap: 15px; padding: 19px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-md); }
+    .loop-item b { font: 700 .8rem var(--mono); color: var(--signal); }
+    .loop-item strong { display: block; }
+    .loop-item span { color: var(--muted); font-size: .9rem; line-height: 1.55; }
+    .practice-workshop { grid-column: 1 / -1; margin-top: 22px; padding-top: 30px; border-top: 1px solid var(--signal); }
+    .practice-workshop h3 { margin: 0 0 20px; font: 500 clamp(1.6rem, 3vw, 2.35rem)/1.12 var(--serif); }
+    .practice-session { display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+    .practice-session div { padding: 19px 18px; border-right: 1px solid var(--line); }
+    .practice-session div:last-child { border-right: 0; }
+    .practice-session b { display: block; color: var(--accent); font: 700 .68rem/1.4 var(--sans); letter-spacing: .12em; text-transform: uppercase; }
+    .practice-session strong { display: block; margin-top: 9px; font: 500 1.08rem/1.25 var(--serif); }
+    .practice-session p { margin: 7px 0 0; color: var(--muted); font-size: .84rem; line-height: 1.55; }
+    .practice-ledger { display: grid; grid-template-columns: .8fr 1.2fr; gap: 28px; margin-top: 26px; }
+    .practice-ledger h4 { margin: 0; font: 500 1.25rem/1.25 var(--serif); }
+    .practice-ledger p { margin: 7px 0 0; color: var(--muted); }
+    .practice-ledger ul { margin: 0; padding-left: 1.15rem; }
+    .practice-ledger li + li { margin-top: 7px; }
+    .about { display: grid; grid-template-columns: .66fr 1.34fr; gap: clamp(36px, 8vw, 100px); align-items: start; }
+    .about h2 { margin: 0; font: 500 clamp(2rem, 4vw, 3.4rem)/1.05 var(--serif); letter-spacing: -.03em; }
+    .about-copy { font-size: 1.08rem; }
+    .about-copy p:first-child { margin-top: 0; }
+    .about-copy p { color: var(--muted); }
+    .principles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 30px; }
+    .principle { border-top: 3px solid var(--accent); padding-top: 12px; font-size: .9rem; font-weight: 700; }
+    .hero-side { display: grid; gap: 18px; }
+    .term-card {
+      border: 1px solid var(--signal); background: var(--accent-soft); padding: 20px 22px;
+      box-shadow: 5px 6px 0 rgba(83, 27, 44, .06);
+    }
+    .term-top { display: flex; justify-content: space-between; gap: 20px; align-items: baseline; margin-bottom: 8px; }
+    .term-top span { color: var(--accent); font: 700 .64rem/1.4 var(--sans); letter-spacing: .16em; text-transform: uppercase; }
+    .term-top button { border: 0; padding: 0; background: transparent; color: var(--accent); cursor: pointer; font: 700 .66rem var(--sans); text-decoration: underline; text-underline-offset: 3px; }
+    .term-card h2 { margin: 0; font: 500 1.55rem/1.15 var(--serif); }
+    .term-card p { margin: 7px 0 0; color: var(--muted); font-size: .91rem; line-height: 1.55; }
+    .progress-panel { margin: 0 0 36px; padding: 22px 24px; border: 1px solid var(--signal); background: color-mix(in srgb, var(--surface) 78%, transparent); }
+    .progress-head { display: flex; justify-content: space-between; gap: 20px; align-items: center; }
+    .progress-head strong { font: 500 1.2rem var(--serif); }
+    .progress-count { color: var(--accent); font: 700 .7rem var(--sans); letter-spacing: .12em; text-transform: uppercase; }
+    .progress-track { height: 5px; background: var(--surface-2); margin-top: 14px; overflow: hidden; }
+    .progress-fill { width: 0; height: 100%; background: var(--signal); transition: width .28s ease; }
+    .progress-note { margin: 10px 0 0; color: var(--muted); font-size: .82rem; }
+    .module-title { position: relative; }
+    .module-check { margin-top: 18px; border: 1px solid var(--line); background: transparent; color: var(--accent); padding: 7px 10px; cursor: pointer; font-size: .71rem; font-weight: 750; letter-spacing: .08em; text-transform: uppercase; }
+    .module-check[aria-pressed="true"] { background: var(--accent-strong); border-color: var(--accent-strong); color: #fff9ed; }
+    .module-notes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 18px; }
+    .module-note { border-top: 1px solid var(--line); padding-top: 10px; color: var(--muted); font-size: .84rem; line-height: 1.55; }
+    .module-note b { display: block; color: var(--ink); margin-bottom: 3px; }
+    .celebration { margin-top: 18px; padding: 15px 18px; background: var(--accent-strong); color: #fff9ed; font: italic 500 1rem/1.55 var(--serif); }
+    .insight-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .insight-card { padding: 26px; border-top: 2px solid var(--signal); background: color-mix(in srgb, var(--surface) 70%, transparent); }
+    .insight-card .label { color: var(--accent); font: 700 .66rem/1.5 var(--sans); letter-spacing: .14em; text-transform: uppercase; }
+    .insight-card h3 { margin: 14px 0 11px; font: 500 1.55rem/1.13 var(--serif); }
+    .insight-card p { margin: 0; color: var(--muted); font-size: .93rem; }
+    .insight-card p + p { margin-top: 12px; }
+    .lab-note { margin-top: 24px; padding: 22px 24px; border-left: 3px solid var(--signal); background: var(--accent-soft); }
+    .lab-note strong { font-family: var(--serif); font-size: 1.12rem; }
+    .lab-note p { margin: 6px 0 0; color: var(--muted); }
+    .answer-set { display: grid; gap: 10px; margin-bottom: 34px; }
+    .answer-set details { border: 1px solid var(--line); background: color-mix(in srgb, var(--surface) 75%, transparent); }
+    .answer-set summary { cursor: pointer; padding: 18px 20px; font: 500 1.12rem/1.4 var(--serif); }
+    .answer-set .answer { border-top: 1px solid var(--line); padding: 18px 20px; color: var(--muted); }
+    .answer p { margin: 0; }
+    .answer p + p { margin-top: 10px; }
+    .quiz-head { display: flex; justify-content: space-between; gap: 20px; align-items: end; margin: 36px 0 17px; }
+    .quiz-head h3 { margin: 0; font: 500 1.8rem/1.15 var(--serif); }
+    .quiz-head p { margin: 0; color: var(--muted); font-size: .88rem; }
+    .quiz-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+    .quiz-card { min-height: 220px; perspective: 900px; cursor: pointer; border: 0; padding: 0; background: transparent; text-align: left; }
+    .quiz-inner { display: block; position: relative; width: 100%; height: 100%; min-height: 220px; transform-style: preserve-3d; transition: transform .42s ease; }
+    .quiz-card[aria-pressed="true"] .quiz-inner { transform: rotateY(180deg); }
+    .quiz-face { position: absolute; inset: 0; backface-visibility: hidden; border: 1px solid var(--line); padding: 24px; display: flex; flex-direction: column; background: var(--surface); }
+    .quiz-face.back { transform: rotateY(180deg); background: var(--accent-strong); color: #fff9ed; border-color: var(--signal); }
+    .quiz-face span { color: var(--signal); font: 700 .65rem/1.4 var(--sans); letter-spacing: .14em; text-transform: uppercase; }
+    .quiz-face strong { margin-top: 18px; font: 500 1.25rem/1.35 var(--serif); }
+    .quiz-face small { margin-top: auto; color: var(--muted); }
+    .quiz-face.back p { margin: 18px 0 0; color: #f2e7df; font-size: .9rem; }
+    .about-aside { margin-top: 30px; padding: 21px 23px; background: var(--accent-soft); border-top: 1px solid var(--signal); }
+    .about-aside strong { font: 500 1.15rem var(--serif); }
+    .about-aside p { margin: 8px 0 0; font-size: .9rem; }
+    .subtle-link { color: var(--accent); font-weight: 750; text-underline-offset: 4px; }
+    .page-panel[hidden], .page-trail[hidden] { display: none !important; }
+    .page-trail {
+      width: min(1160px, calc(100% - 40px)); margin: 34px auto 0; padding: 14px 0 16px;
+      display: flex; align-items: center; gap: 10px; border-bottom: 1px solid var(--signal);
+      color: var(--muted); font-size: .72rem; letter-spacing: .1em; text-transform: uppercase;
+      scroll-margin-top: 88px;
+    }
+    .page-trail a { color: var(--accent); font-weight: 750; text-decoration-thickness: 1px; text-underline-offset: 4px; }
+    .page-trail .trail-arrow { color: var(--signal); }
+    .topic-index { width: min(1160px, calc(100% - 40px)); margin: 0 auto; padding: 74px 0 108px; }
+    .topic-index-head { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(260px, .6fr); gap: 44px; align-items: end; margin-bottom: 46px; }
+    .topic-index-head h1 { font-size: clamp(2.75rem, 6vw, 5.35rem); max-width: 780px; }
+    .topic-index-head p { margin: 0; color: var(--muted); font-size: 1.04rem; }
+    .topic-index-grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 16px; }
+    .topic-card {
+      --card-number: "";
+      position: relative; grid-column: span 4; min-height: 255px; padding: 26px;
+      display: flex; flex-direction: column; overflow: hidden;
+      color: var(--ink); text-decoration: none; background: color-mix(in srgb, var(--surface) 78%, transparent);
+      border-top: 1px solid var(--signal); border-right: 1px solid var(--line); border-bottom: 1px solid var(--line);
+    }
+    .topic-card:nth-child(1), .topic-card:nth-child(5) { grid-column: span 6; }
+    .topic-card::after {
+      content: var(--card-number); position: absolute; right: 16px; top: 4px;
+      color: color-mix(in srgb, var(--signal) 14%, transparent); font: 500 5.5rem/.9 var(--serif); pointer-events: none;
+    }
+    .topic-card-number { position: relative; z-index: 1; color: var(--accent); font: 700 .66rem/1.4 var(--sans); letter-spacing: .16em; text-transform: uppercase; }
+    .topic-card h2 { position: relative; z-index: 1; margin: 30px 0 11px; max-width: 340px; font: 500 1.75rem/1.12 var(--serif); }
+    .topic-card p { position: relative; z-index: 1; margin: 0; max-width: 420px; color: var(--muted); font-size: .92rem; line-height: 1.62; }
+    .topic-card-action { position: relative; z-index: 1; margin-top: auto; padding-top: 24px; color: var(--accent); font: 700 .68rem/1.4 var(--sans); letter-spacing: .13em; text-transform: uppercase; }
+    .topic-card-action::after { content: " →"; color: var(--signal); }
+    .topic-card:nth-child(2), .topic-card:nth-child(6) { background: color-mix(in srgb, var(--accent-soft) 38%, var(--surface)); }
+    .topic-card:nth-child(4) { background: var(--accent-strong); color: #fff9ed; border-color: var(--signal); }
+    .topic-card:nth-child(4) p { color: #ebdfe0; }
+    .topic-card:nth-child(4) .topic-card-number, .topic-card:nth-child(4) .topic-card-action { color: #d6b264; }
+    footer { width: min(1160px, calc(100% - 40px)); margin: 0 auto; padding: 36px 0 52px; border-top: 1px solid var(--line); display: flex; justify-content: space-between; gap: 20px; color: var(--muted); font-size: .86rem; }
+    .toast { position: fixed; bottom: 22px; left: 50%; transform: translate(-50%, 20px); background: var(--ink); color: var(--bg); padding: 10px 15px; border-radius: var(--radius-sm); opacity: 0; pointer-events: none; transition: .2s ease; z-index: 50; }
+    .toast.show { opacity: 1; transform: translate(-50%, 0); }
+    :focus-visible { outline: 3px solid color-mix(in srgb, var(--accent) 55%, transparent); outline-offset: 3px; }
+    @media (max-width: 900px) {
+      .hero, .featured, .section-head, .article-body, .practice-grid, .about, .curriculum-intro { grid-template-columns: 1fr; }
+      .roadmap > li { grid-template-columns: 52px minmax(190px, .7fr) minmax(0, 1.3fr); }
+      .hero { padding-top: 72px; }
+      .hero-diagram { max-width: 520px; transform: none; }
+      .path-grid { grid-template-columns: repeat(2, 1fr); }
+      .path-card:nth-child(n) { margin-top: 0; }
+      .library { grid-template-columns: repeat(2, 1fr); }
+      .section-head { align-items: start; }
+    }
+    @media (max-width: 650px) {
+      .topbar-inner, .hero, .section, footer { width: min(100% - 28px, 1160px); }
+      nav a:nth-child(2), nav a:nth-child(3), nav a:nth-child(4) { display: none; }
+      nav { gap: 14px; }
+      .topic-label { font-size: .88rem; }
+      h1 { font-size: clamp(3rem, 16vw, 5rem); }
+      .hero { padding: 54px 0 56px; gap: 38px; }
+      .hero-copy { margin-top: 20px; }
+      .hero-actions .button { width: 100%; }
+      .section { padding: 60px 0; }
+      .path-grid, .library, .principles { grid-template-columns: 1fr; }
+      .path-card { min-height: 235px; }
+      .roadmap > li { grid-template-columns: 38px 1fr; gap: 10px 12px; }
+      .roadmap > li::before { grid-row: 1 / span 2; }
+      .module-body { grid-column: 2; }
+      .curriculum-next { align-items: stretch; flex-direction: column; }
+      .curriculum-next .button { width: 100%; }
+      .search-row { grid-template-columns: 1fr; }
+      .search-row .button { display: none; }
+      .search-panel { margin-left: -3px; margin-right: -3px; }
+      .article-heading { padding: 18px; }
+      .article-body { padding: 22px 18px 24px; }
+      .article-body { gap: 18px; }
+      .code-block { padding: 48px 16px 18px; }
+      footer { flex-direction: column; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { transition-duration: .01ms !important; }
+    }
+
+    /* Editorial presentation, drawn from the owner's talk deck */
+    :root {
+      --bg: #f4eddf;
+      --surface: #faf6ed;
+      --surface-2: #e9ded1;
+      --ink: #18263e;
+      --muted: #536071;
+      --line: #c9b98f;
+      --accent: #7d2c43;
+      --accent-strong: #531b2c;
+      --accent-soft: #ead2d6;
+      --signal: #a98238;
+      --code-bg: #17233a;
+      --code-ink: #fbf4e7;
+      --shadow: 9px 11px 0 rgba(83, 27, 44, .08);
+      --radius-sm: 1px;
+      --radius-md: 2px;
+      --radius-lg: 3px;
+      --serif: "Bodoni 72", Didot, "Iowan Old Style", Baskerville, Georgia, serif;
+      --sans: "Avenir Next", Avenir, "Gill Sans", Candara, sans-serif;
+    }
+    body {
+      background-image:
+        linear-gradient(color-mix(in srgb, var(--signal) 5%, transparent) 1px, transparent 1px),
+        linear-gradient(90deg, color-mix(in srgb, var(--signal) 4%, transparent) 1px, transparent 1px);
+      background-size: 42px 42px;
+      letter-spacing: .002em;
+    }
+    .topbar {
+      background: color-mix(in srgb, var(--bg) 94%, transparent);
+      border-bottom-color: color-mix(in srgb, var(--signal) 58%, transparent);
+      backdrop-filter: blur(9px);
+    }
+    .topbar-inner { min-height: 68px; }
+    .topic-label { font-family: var(--sans); font-size: .7rem; font-weight: 700; letter-spacing: .22em; text-transform: uppercase; }
+    .topic-label span:first-child { width: 12px; height: 12px; border-color: var(--signal); background: transparent; }
+    nav a { font-size: .68rem; letter-spacing: .15em; text-transform: uppercase; }
+    .hero { padding-top: clamp(82px, 11vw, 140px); padding-bottom: clamp(82px, 10vw, 118px); }
+    .eyebrow, .section-kicker {
+      color: var(--accent);
+      font: 700 .68rem/1.5 var(--sans);
+      letter-spacing: .25em;
+      text-transform: uppercase;
+      font-style: normal;
+    }
+    .eyebrow { max-width: 620px; margin-bottom: 25px; }
+    h1 { font-weight: 500; line-height: .98; letter-spacing: -.035em; }
+    .hero-copy { color: var(--ink); max-width: 690px; line-height: 1.75; }
+    .hero-actions { margin-top: 38px; }
+    .button {
+      min-height: 44px;
+      border-color: var(--accent);
+      padding-inline: 20px;
+      font-size: .71rem;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+    .button.primary { background: var(--accent-strong); border-color: var(--accent-strong); color: #fff9ed; }
+    .button.secondary { color: var(--accent); background: transparent; }
+    .hero-diagram {
+      position: relative;
+      padding: 28px;
+      background-color: var(--surface);
+      background-image: linear-gradient(90deg, color-mix(in srgb, var(--signal) 7%, transparent) 1px, transparent 1px);
+      background-size: 28px 100%;
+      border-color: color-mix(in srgb, var(--signal) 68%, var(--line));
+      box-shadow: var(--shadow);
+      transform: none;
+    }
+    .hero-diagram::before, .hero-diagram::after {
+      content: "";
+      position: absolute;
+      width: 42px;
+      height: 42px;
+      pointer-events: none;
+    }
+    .hero-diagram::before { left: -9px; top: -9px; border-left: 2px solid var(--signal); border-top: 2px solid var(--signal); }
+    .hero-diagram::after { right: -9px; bottom: -9px; border-right: 2px solid var(--signal); border-bottom: 2px solid var(--signal); }
+    .diagram-top { color: var(--accent); letter-spacing: .17em; }
+    .status-dot { background: var(--signal); box-shadow: none; border-radius: 0; transform: rotate(45deg); }
+    .flow-box { background: color-mix(in srgb, var(--bg) 86%, transparent); border-color: color-mix(in srgb, var(--line) 76%, transparent); }
+    .section { position: relative; padding-top: 106px; padding-bottom: 106px; }
+    .section + .section { border-top-color: color-mix(in srgb, var(--signal) 64%, transparent); }
+    .section::before, .section::after {
+      position: absolute;
+      top: 72px;
+      color: var(--signal);
+      font: 700 .66rem/1.5 var(--sans);
+      letter-spacing: .2em;
+      text-transform: uppercase;
+    }
+    .section::before { left: 0; color: var(--accent); }
+    .section::after { right: 0; }
+    #paths::before { content: "Learning paths"; }
+    #paths::after { content: "01 / 09"; }
+    #beginner::before { content: "Begin here"; }
+    #beginner::after { content: "02 / 09"; }
+    .section[aria-label="Featured framework"]::before { content: "Worked example"; }
+    .section[aria-label="Featured framework"]::after { content: "03 / 09"; }
+    #library::before { content: "Field notes"; }
+    #library::after { content: "04 / 09"; }
+    #interview::before { content: "Interview practice"; }
+    #interview::after { content: "05 / 09"; }
+    #ai-verification::before { content: "AI in verification"; }
+    #ai-verification::after { content: "06 / 09"; }
+    #reference::before { content: "Quick reference"; }
+    #reference::after { content: "07 / 09"; }
+    .section[aria-label="Practice method"]::before { content: "Practice loop"; }
+    .section[aria-label="Practice method"]::after { content: "08 / 09"; }
+    #about::before { content: "About"; }
+    #about::after { content: "09 / 09"; }
+    .section-head, .curriculum-intro { margin-bottom: 54px; }
+    .section-head h2, .curriculum-intro h2, .featured h2, .practice-note h2, .about h2 { font-weight: 500; line-height: 1.02; letter-spacing: -.03em; }
+    .section-head p, .curriculum-intro p { line-height: 1.78; }
+    .path-grid { gap: 0; border-top: 1px solid var(--signal); border-bottom: 1px solid var(--line); }
+    .path-card {
+      min-height: 315px;
+      padding: 30px 25px 28px;
+      background: transparent;
+      border: 0;
+      border-right: 1px solid var(--line);
+    }
+    .path-card:last-child { border-right: 0; }
+    .path-card:nth-child(n) { margin-top: 0; }
+    .path-num { color: var(--signal); font: 700 .67rem/1.4 var(--sans); letter-spacing: .16em; text-transform: uppercase; }
+    .path-card h3 { margin-top: 38px; font-size: 1.65rem; }
+    .path-card ul { font-size: .82rem; }
+    .roadmap { border-top-color: var(--signal); }
+    .roadmap > li { padding: 38px 0; }
+    .roadmap > li::before { color: var(--signal); letter-spacing: .14em; }
+    .module-title p { color: var(--accent); font-size: .68rem; letter-spacing: .14em; text-transform: uppercase; }
+    .recommended { background: color-mix(in srgb, var(--accent-soft) 72%, transparent); border-top: 1px solid color-mix(in srgb, var(--accent) 35%, transparent); }
+    .featured {
+      position: relative;
+      background-color: var(--accent-strong);
+      background-image:
+        linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.02) 1px, transparent 1px);
+      background-size: 36px 36px;
+      border: 1px solid var(--signal);
+      box-shadow: 10px 12px 0 color-mix(in srgb, var(--signal) 13%, transparent);
+    }
+    .featured::before { content: "“"; position: absolute; left: 22px; top: 12px; color: var(--signal); font: italic 500 3rem/1 var(--serif); opacity: .7; }
+    .featured .kicker { color: #d6b264; font: 700 .67rem/1.5 var(--sans); letter-spacing: .2em; text-transform: uppercase; font-style: normal; }
+    .featured > div > p { font: italic 500 1.08rem/1.68 var(--serif); opacity: .88; }
+    .framework div::before { color: #d6b264; letter-spacing: .12em; }
+    .search-panel { background: color-mix(in srgb, var(--accent-soft) 58%, var(--bg)); border-top: 1px solid var(--signal); border-bottom: 1px solid var(--line); }
+    .filter { border-radius: 1px; background: transparent; font-size: .69rem; letter-spacing: .08em; text-transform: uppercase; }
+    .filter[aria-pressed="true"] { background: var(--accent-strong); color: #fff9ed; border-color: var(--accent-strong); }
+    .library { gap: 0; border-top: 1px solid var(--signal); }
+    .resource { min-height: 270px; padding: 28px; background: color-mix(in srgb, var(--surface) 58%, transparent); border-width: 0 1px 1px 0; }
+    .resource:nth-child(3n) { border-right: 0; }
+    .resource-meta { color: var(--accent); letter-spacing: .08em; }
+    .article { border-radius: 0; background: color-mix(in srgb, var(--surface) 70%, transparent); }
+
+
+    .article-heading span { color: var(--accent); letter-spacing: .08em; }
+    .practice-note { background: var(--accent-soft); border-top: 1px solid var(--signal); }
+    .loop-item { border-radius: 0; background: color-mix(in srgb, var(--surface) 72%, transparent); }
+    .loop-item b { color: var(--signal); letter-spacing: .12em; }
+    .about { border-top: 1px solid var(--signal); padding-top: 38px; }
+    .about-copy > p:first-child { font: italic 500 1.27rem/1.68 var(--serif); color: var(--ink); }
+    .principle { border-top: 1px solid var(--signal); color: var(--accent); font-size: .72rem; letter-spacing: .1em; text-transform: uppercase; }
+    footer { border-top-color: var(--signal); font-size: .7rem; letter-spacing: .08em; text-transform: uppercase; }
+
+    /* A living notebook doodle: playful, but still part of the editorial system */
+    .doodle-header {
+      width: min(1160px, calc(100% - 40px));
+      margin: 24px auto 0;
+    }
+    .doodle-button {
+      position: relative;
+      display: block;
+      width: 100%;
+      height: 230px;
+      padding: 0;
+      overflow: hidden;
+      border: 1px solid color-mix(in srgb, var(--signal) 72%, var(--line));
+      background:
+        linear-gradient(90deg, transparent 0 49.85%, color-mix(in srgb, var(--signal) 8%, transparent) 49.85% 50.15%, transparent 50.15%),
+        repeating-linear-gradient(0deg, transparent 0 33px, color-mix(in srgb, var(--signal) 7%, transparent) 33px 34px),
+        color-mix(in srgb, var(--surface) 66%, transparent);
+      color: var(--ink);
+      cursor: pointer;
+      text-align: left;
+      box-shadow: 7px 8px 0 color-mix(in srgb, var(--accent) 7%, transparent);
+      isolation: isolate;
+    }
+    .doodle-button::before,
+    .doodle-button::after {
+      content: "";
+      position: absolute;
+      z-index: 3;
+      width: 54px;
+      height: 13px;
+      top: 8px;
+      background: color-mix(in srgb, #d6b264 30%, transparent);
+      border-top: 1px solid color-mix(in srgb, var(--signal) 24%, transparent);
+      border-bottom: 1px solid color-mix(in srgb, var(--signal) 18%, transparent);
+      pointer-events: none;
+    }
+    .doodle-button::before { left: 20px; transform: rotate(-3deg); }
+    .doodle-button::after { right: 20px; transform: rotate(3deg); }
+    .doodle-word {
+      position: absolute;
+      z-index: 2;
+      left: 50%;
+      top: 48%;
+      transform: translate(-50%, -50%) rotate(-.7deg);
+      white-space: nowrap;
+      font: 500 clamp(3.8rem, 8vw, 7rem)/.9 var(--serif);
+      letter-spacing: -.065em;
+      text-shadow: 2px 2px 0 color-mix(in srgb, var(--signal) 18%, transparent);
+      pointer-events: none;
+    }
+    .doodle-word .dv { color: var(--accent); font-style: italic; }
+    .doodle-word::after {
+      content: "";
+      position: absolute;
+      left: 4%;
+      right: 1%;
+      bottom: -18px;
+      height: 8px;
+      border-top: 2px solid var(--signal);
+      border-radius: 50%;
+      transform: rotate(.8deg);
+    }
+    .doodle-caption {
+      position: absolute;
+      z-index: 4;
+      right: 20px;
+      bottom: 13px;
+      color: var(--accent);
+      font: 700 .61rem/1.4 var(--sans);
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      pointer-events: none;
+    }
+    .doodle-status {
+      position: absolute;
+      z-index: 4;
+      left: 20px;
+      bottom: 13px;
+      color: var(--muted);
+      font: italic 500 .83rem/1.4 var(--serif);
+      pointer-events: none;
+    }
+    .doodle-art { position: absolute; inset: 0; width: 100%; height: 100%; }
+    .doodle-art * { vector-effect: non-scaling-stroke; }
+    .doodle-ink { fill: none; stroke: var(--ink); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .doodle-wine { fill: none; stroke: var(--accent); stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+    .doodle-gold { fill: none; stroke: var(--signal); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+    .doodle-paper-fill { fill: var(--surface); stroke: var(--ink); stroke-width: 2; }
+    .doodle-wine-fill { fill: var(--accent-soft); stroke: var(--accent); stroke-width: 2; }
+    .doodle-navy-fill { fill: var(--ink); stroke: var(--ink); stroke-width: 2; }
+    .doodle-gold-fill { fill: #d6b264; stroke: var(--signal); stroke-width: 1.5; }
+    .chip-friend { transform-origin: 116px 111px; animation: doodle-float 4.4s ease-in-out infinite; }
+    .gate-friend { transform-origin: 282px 61px; animation: doodle-nod 3.8s ease-in-out infinite; }
+    .score-friend { transform-origin: 984px 108px; animation: doodle-float 4.4s .7s ease-in-out infinite; }
+    .scope-friend { transform-origin: 820px 57px; animation: doodle-nod 4.6s .4s ease-in-out infinite reverse; }
+    .doodle-eye { transform-box: fill-box; transform-origin: center; animation: doodle-blink 5s infinite; }
+    .wave-runner { stroke-dasharray: 12 8; animation: doodle-wave 2.2s linear infinite; }
+    .packet { transform-origin: center; animation: doodle-hop 1.8s ease-in-out infinite; }
+    .spark { opacity: .35; animation: doodle-twinkle 2.3s ease-in-out infinite; }
+    .spark:nth-of-type(2) { animation-delay: .7s; }
+    .score-arm { transform-box: fill-box; transform-origin: left center; }
+    .doodle-button:hover .chip-friend { animation-duration: 1.7s; }
+    .doodle-button:hover .gate-friend { transform: rotate(5deg); }
+    .doodle-button:hover .scope-friend { transform: rotate(-4deg); }
+    .doodle-button.is-running .packet { animation: doodle-test-packet 1.25s ease-in-out both; }
+    .doodle-button.is-running .score-friend { animation: doodle-celebrate .48s ease-in-out 2 alternate; }
+    .doodle-button.is-running .score-arm { animation: doodle-arm-wave .28s ease-in-out 5 alternate; }
+    .doodle-button.is-running .confetti { animation: doodle-confetti .9s .55s ease-out both; }
+    .doodle-button.is-running .wave-runner { animation-duration: .48s; }
+    .doodle-button:focus-visible { outline: 3px solid var(--accent); outline-offset: 5px; }
+    @keyframes doodle-float { 0%, 100% { transform: translateY(0) rotate(-1deg); } 50% { transform: translateY(-5px) rotate(1deg); } }
+    @keyframes doodle-nod { 0%, 100% { transform: rotate(-1.5deg); } 50% { transform: rotate(2deg); } }
+    @keyframes doodle-blink { 0%, 44%, 48%, 100% { transform: scaleY(1); } 46% { transform: scaleY(.12); } }
+    @keyframes doodle-wave { to { stroke-dashoffset: -40; } }
+    @keyframes doodle-hop { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+    @keyframes doodle-test-packet { 0% { transform: translate(0, 0) rotate(0); } 45% { transform: translate(352px, -12px) rotate(8deg); } 100% { transform: translate(705px, 0) rotate(0); } }
+    @keyframes doodle-celebrate { to { transform: translateY(-11px) rotate(3deg); } }
+    @keyframes doodle-arm-wave { to { transform: rotate(-34deg); } }
+    @keyframes doodle-twinkle { 0%, 100% { opacity: .18; transform: scale(.82); } 50% { opacity: .9; transform: scale(1.08); } }
+    @keyframes doodle-confetti { 0% { opacity: 0; transform: translateY(7px) scale(.5); } 45% { opacity: 1; } 100% { opacity: 0; transform: translateY(-24px) scale(1.1); } }
+    @media (hover: hover) {
+      .path-card, .resource, .loop-item, .insight-card, .topic-card { transition: background-color .18s ease, transform .18s ease; }
+      .path-card:hover, .resource:hover, .loop-item:hover, .insight-card:hover, .topic-card:hover { background: var(--surface); transform: translateY(-2px); }
+      .topic-card:nth-child(4):hover { background: #68243a; }
+      .term-top button:hover, .subtle-link:hover { color: var(--signal); }
+    }
+    @media (max-width: 900px) {
+      .path-grid { grid-template-columns: repeat(2, 1fr); }
+      .topic-index-head { grid-template-columns: 1fr; align-items: start; }
+      .topic-card, .topic-card:nth-child(1), .topic-card:nth-child(5) { grid-column: span 6; }
+      .path-card:nth-child(2n) { border-right: 0; }
+      .path-card:nth-child(-n+2) { border-bottom: 1px solid var(--line); }
+      .resource:nth-child(3n) { border-right: 1px solid var(--line); }
+      .resource:nth-child(2n) { border-right: 0; }
+      .resource:nth-child(3), .resource:nth-child(5) { transform: none; }
+      .insight-grid, .quiz-grid { grid-template-columns: 1fr 1fr; }
+      .module-notes { grid-template-columns: 1fr; }
+      .practice-session { grid-template-columns: repeat(2, 1fr); }
+      .practice-session div:nth-child(2) { border-right: 0; }
+      .practice-session div:nth-child(-n+2) { border-bottom: 1px solid var(--line); }
+    }
+    @media (max-width: 650px) {
+      .topbar-inner { min-height: 60px; }
+      .topic-label { max-width: 150px; line-height: 1.45; }
+      .page-trail, .topic-index { width: min(100% - 28px, 1160px); }
+      .topic-index { padding: 54px 0 76px; }
+      .topic-index-head { gap: 18px; margin-bottom: 34px; }
+      .topic-index-grid { grid-template-columns: 1fr; }
+      .topic-card, .topic-card:nth-child(1), .topic-card:nth-child(5) { grid-column: auto; min-height: 220px; }
+      .topic-card::after { font-size: 4.5rem; }
+      .page-trail { margin-top: 24px; }
+      nav a { font-size: .63rem; }
+      h1 { font-size: clamp(3.25rem, 15.7vw, 5rem); }
+      .hero { padding-top: 72px; padding-bottom: 72px; }
+      .section { padding-top: 82px; padding-bottom: 82px; }
+      .section::before, .section::after { top: 50px; }
+      .path-grid { grid-template-columns: 1fr; }
+      .path-card { min-height: 0; border-right: 0; border-bottom: 1px solid var(--line); }
+      .path-card:nth-child(n) { border-bottom: 1px solid var(--line); }
+      .path-card:last-child { border-bottom: 0; }
+      .library, .insight-grid, .quiz-grid { grid-template-columns: 1fr; }
+      .resource:nth-child(n) { border-right: 0; }
+      .article:nth-child(even) { margin-left: 0; }
+      .chapter-mark { right: 4px; top: 58px; font-size: 5rem; }
+      .circuit-rule { width: 58%; margin-bottom: 22px; }
+      .featured { padding-top: 54px; }
+      .progress-head, .quiz-head, .term-top { align-items: flex-start; flex-direction: column; gap: 7px; }
+      .module-check { width: 100%; }
+      .quiz-card, .quiz-inner { min-height: 235px; }
+      .term-card { padding: 18px; }
+      .practice-session, .practice-ledger { grid-template-columns: 1fr; }
+      .practice-session div { border-right: 0; border-bottom: 1px solid var(--line); }
+      .practice-session div:last-child { border-bottom: 0; }
+      .doodle-header { width: min(100% - 28px, 1160px); margin-top: 16px; }
+      .doodle-button { height: 180px; }
+      .doodle-word { top: 46%; font-size: clamp(3.25rem, 17vw, 5.2rem); }
+      .doodle-caption { right: 12px; bottom: 10px; max-width: 150px; text-align: right; font-size: .54rem; }
+      .doodle-status { left: 12px; bottom: 10px; max-width: 142px; font-size: .71rem; }
+      .doodle-button::before, .doodle-button::after { width: 36px; }
+      .chip-friend { transform: translateX(-14px); }
+      .score-friend { transform: translateX(14px); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .chip-friend, .gate-friend, .score-friend, .scope-friend, .doodle-eye, .wave-runner, .packet, .spark,
+      .doodle-button.is-running .packet, .doodle-button.is-running .score-friend, .doodle-button.is-running .score-arm,
+      .doodle-button.is-running .confetti { animation: none !important; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#content">Skip to content</a>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="topic-label"><span aria-hidden="true"></span><span>Practical verification library</span></div>
+      <nav aria-label="Primary navigation">
+        <a href="#home" data-nav-page="home">Topics</a>
+        <a href="#start" data-nav-page="start">Start here</a>
+        <a href="#about" data-nav-page="about">About</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="doodle-header" aria-label="SiliconDV interactive header">
+    <button class="doodle-button" id="doodle-testbench" type="button" aria-pressed="false" aria-describedby="doodle-status">
+      <span class="doodle-word" aria-hidden="true">Silicon<span class="dv">DV</span></span>
+      <svg class="doodle-art" viewBox="0 0 1120 230" aria-hidden="true">
+        <!-- a hand drawn chip with pin legs and a quietly pleased face -->
+        <g class="chip-friend">
+          <path class="doodle-wine-fill" d="M70 73 Q78 63 92 66 L145 64 Q158 67 159 80 L161 135 Q157 148 144 148 L88 150 Q73 147 72 134 Z"/>
+          <path class="doodle-ink" d="M82 65l-1-16m18 15l-1-18m20 18l1-16m19 16l2-18m20 27l17-2m-16 20l19-1m-18 20l16 2m-17 21l18 4M72 79L55 77m17 20l-19 1m19 18l-17 2m17 18l-18 5"/>
+          <path class="doodle-ink doodle-eye" d="M96 100q4-5 8 0M128 100q4-5 8 0"/>
+          <path class="doodle-wine" d="M105 119q12 10 24-1"/>
+          <path class="doodle-gold" d="M83 84q35-12 67 1" opacity=".45"/>
+          <path class="doodle-ink" d="M87 150l-7 14m61-16l9 14"/>
+        </g>
+
+        <!-- a tiny logic gate leaning in to watch -->
+        <g class="gate-friend">
+          <path class="doodle-paper-fill" d="M246 39v45h20q34 0 34-22 0-23-34-23z"/>
+          <path class="doodle-ink" d="M227 49h19m-19 25h19m54-12h21"/>
+          <circle class="doodle-gold-fill" cx="326" cy="62" r="5"/>
+          <path class="doodle-wine" d="M266 51q3-3 6 0m10 0q3-3 6 0m-16 17q5 5 11 0"/>
+          <path class="doodle-gold spark" d="M234 29l-6-8m16 8l1-10m68 16l9-7"/>
+        </g>
+
+        <!-- the travelling stimulus and lively waveform -->
+        <path class="doodle-gold wave-runner" d="M194 169h79v-17h51v17h50v-17h54v17h51v-17h56v17h49v-17h56v17h55v-17h53v17h76"/>
+        <path class="doodle-wine" d="M194 184q126-8 252 0t252 0 226 0" opacity=".38"/>
+        <g class="packet">
+          <path class="doodle-wine-fill" d="M206 150l21-9 22 9v23l-22 10-21-10z"/>
+          <path class="doodle-wine" d="M207 150l20 10 21-10m-21 10v22"/>
+          <circle class="doodle-navy-fill" cx="227" cy="160" r="2"/>
+        </g>
+
+        <!-- pocket oscilloscope -->
+        <g class="scope-friend">
+          <path class="doodle-paper-fill" d="M796 33q4-5 11-5h71q10 1 10 11v48q-1 10-10 11h-72q-10-2-10-11z"/>
+          <path class="doodle-ink" d="M808 42h58v38h-58z"/>
+          <path class="doodle-wine wave-runner" d="M811 63h9v-11h12v21h12V57h9v6h10"/>
+          <circle class="doodle-gold-fill" cx="878" cy="44" r="3"/>
+          <circle class="doodle-wine-fill" cx="878" cy="57" r="3"/>
+          <path class="doodle-ink" d="M813 98l-4 12m67-12l5 12"/>
+        </g>
+
+        <!-- a scoreboard character waits at the end of the run -->
+        <g class="score-friend">
+          <path class="doodle-paper-fill" d="M951 70q1-9 11-10l76 2q10 1 10 11l-2 75q-2 9-11 9l-75-2q-10-1-10-11z"/>
+          <path class="doodle-gold" d="M961 79h75M962 126h74"/>
+          <path class="doodle-wine" d="M967 91l7 7 12-16m-19 30l7 7 12-16"/>
+          <path class="doodle-ink" d="M995 91h31m-31 20h31"/>
+          <path class="doodle-ink doodle-eye" d="M974 140q3-4 6 0m22 0q3-4 6 0"/>
+          <path class="doodle-wine" d="M983 145q8 7 16 0"/>
+          <path class="doodle-ink" d="M958 154l-7 13m80-10l8 13"/>
+          <path class="doodle-ink score-arm" d="M1047 91q18-8 22-22m-21 25q19 3 26 15"/>
+          <g class="confetti" opacity="0">
+            <path class="doodle-wine" d="M1055 47l8-9m-1 18l12 1m-25-19l-2-12"/>
+            <path class="doodle-gold" d="M1081 41l7-5m-18-9l4-10m-39 27l-8-7"/>
+          </g>
+        </g>
+
+        <!-- notebook flourishes -->
+        <path class="doodle-gold spark" d="M371 38l4-12 4 12 12 4-12 4-4 12-4-12-12-4z"/>
+        <path class="doodle-wine spark" d="M737 79l3-9 3 9 9 3-9 3-3 9-3-9-9-3z"/>
+        <path class="doodle-ink" d="M396 203q22 8 43 0m257 3q17-8 35 0" opacity=".38"/>
+      </svg>
+      <span class="doodle-status" id="doodle-status" aria-live="polite">Tiny testbench ready.</span>
+      <span class="doodle-caption">Tap to run the tiny testbench</span>
+    </button>
+  </div>
+
+  <div class="page-trail" id="page-trail" aria-label="Breadcrumb" hidden>
+    <a href="#home">All topics</a><span class="trail-arrow" aria-hidden="true">/</span><span id="trail-current">Start here</span>
+  </div>
+
+  <main id="content">
+    <section class="topic-index page-panel" data-page="home" aria-labelledby="topic-index-title">
+      <div class="topic-index-head">
+        <div>
+          <p class="eyebrow">Choose the question you are trying to answer.</p>
+          <h1 id="topic-index-title">Open a topic. Learn it all the way through.</h1>
+        </div>
+        <p>This is a working notebook for design verification. Begin at the start, prepare for an interview, look up a detail or spend a focused practice session with one small design.</p>
+      </div>
+      <div class="topic-index-grid" aria-label="SiliconDV topics">
+        <a class="topic-card" href="#start" style="--card-number:'01'">
+          <span class="topic-card-number">Start here</span><h2>Beginner roadmap</h2>
+          <p>Learn what verification engineers do, then move through digital design, SystemVerilog, UVM, assertions, CDC and signoff in a sensible order.</p>
+          <span class="topic-card-action">Open the roadmap</span>
+        </a>
+        <a class="topic-card" href="#interview" style="--card-number:'02'">
+          <span class="topic-card-number">Explain your thinking</span><h2>Interview preparation</h2>
+          <p>Practise the questions that reveal judgement, with model answers, tradeoffs and flip cards you can answer aloud before checking.</p>
+          <span class="topic-card-action">Practise now</span>
+        </a>
+        <a class="topic-card" href="#ai-verification" style="--card-number:'03'">
+          <span class="topic-card-number">Engineer stays in charge</span><h2>AI in verification</h2>
+          <p>See where AI can shorten bring up and regression work, where it fails confidently and what still needs careful engineering review.</p>
+          <span class="topic-card-action">Read the field notes</span>
+        </a>
+        <a class="topic-card" href="#library" style="--card-number:'04'">
+          <span class="topic-card-number">Browse and search</span><h2>Library</h2>
+          <p>Find practical notes on verification strategy, SystemVerilog, UVM, debug, coverage and CDC, each with an example worth trying.</p>
+          <span class="topic-card-action">Enter the library</span>
+        </a>
+        <a class="topic-card" href="#reference" style="--card-number:'05'">
+          <span class="topic-card-number">Keep beside your code</span><h2>Quick reference</h2>
+          <p>Use compact checklists and code patterns without losing the reasoning that makes each rule useful.</p>
+          <span class="topic-card-action">Open the reference</span>
+        </a>
+        <a class="topic-card" href="#practice" style="--card-number:'06'">
+          <span class="topic-card-number">Forty five focused minutes</span><h2>Practice workshop</h2>
+          <p>Take a small FIFO from written intent to prediction, checking, an intentional fault and a clear root cause.</p>
+          <span class="topic-card-action">Start the workshop</span>
+        </a>
+        <a class="topic-card" href="#about" style="--card-number:'07'">
+          <span class="topic-card-number">The person behind the notes</span><h2>About</h2>
+          <p>Meet Abinaya and read why SiliconDV is built around intent, failure modes and evidence instead of definitions alone.</p>
+          <span class="topic-card-action">Read the story</span>
+        </a>
+      </div>
+    </section>
+
+    <section class="hero page-panel" data-page="start" aria-labelledby="hero-title" hidden>
+      <div>
+        <p class="eyebrow">The notes I wish I had while learning design verification.</p>
+        <h1 id="hero-title">Design verification, explained clearly.</h1>
+        <p class="hero-copy">Practical notes on SystemVerilog, UVM, assertions, coverage and debug. Each topic begins with design intent, considers what can fail and then turns that reasoning into code.</p>
+        <div class="hero-actions">
+          <a class="button primary" href="#paths">Explore the learning paths</a>
+          <a class="button secondary" href="#reference">Browse the quick reference</a>
+        </div>
+      </div>
+      <div class="hero-side">
+        <aside class="hero-diagram" aria-label="A verification thinking loop">
+          <div class="diagram-top"><span>VERIFICATION LOOP</span><span class="status-dot" aria-hidden="true"></span></div>
+          <div class="flow">
+            <div class="flow-row"><span class="flow-n">01</span><div class="flow-box">Read intent</div></div>
+            <div class="flow-arrow" aria-hidden="true"></div>
+            <div class="flow-row"><span class="flow-n">02</span><div class="flow-box">Model failure modes</div></div>
+            <div class="flow-arrow" aria-hidden="true"></div>
+            <div class="flow-row"><span class="flow-n">03</span><div class="flow-box">Drive, observe, check</div></div>
+            <div class="flow-arrow" aria-hidden="true"></div>
+            <div class="flow-row"><span class="flow-n">04</span><div class="flow-box">Close evidence gaps</div></div>
+          </div>
+          <div class="signal-strip" aria-hidden="true">
+            <svg viewBox="0 0 360 60" role="img">
+              <path d="M0 42H42V17H91V42H139V17H188V42H235V17H284V42H360" fill="none" stroke="currentColor" stroke-width="3" />
+              <path d="M0 51H360" fill="none" stroke="currentColor" stroke-opacity=".18" />
+            </svg>
+          </div>
+        </aside>
+        <aside class="term-card" aria-live="polite">
+          <div class="term-top"><span>Verification term of the day</span><button id="next-term" type="button">Give me another</button></div>
+          <h2 id="term-name">Observability</h2>
+          <p id="term-definition">How easily an internal behavior can be seen at an output, monitor or checker. If a bug happens but nothing notices, you do not have enough observability.</p>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section page-panel" id="paths" data-page="start" aria-labelledby="paths-title" hidden>
+      <div class="section-head">
+        <h2 id="paths-title">A structured path through design verification.</h2>
+        <p>You do not need to master every language feature before verifying a block. Begin with the path that best matches the work in front of you.</p>
+      </div>
+      <div class="path-grid">
+        <article class="path-card">
+          <span class="path-num">Part one</span>
+          <h3>Verification foundations</h3>
+          <p>Turn a design specification into observable behaviors, failure modes and a finite plan. Start with one interface: list its state, legal commands, timing promises and boundary conditions before writing a sequence.</p>
+          <ul><li>Requirements and state</li><li>Stimulus, checking and evidence</li><li>Practice: verify reset during traffic</li></ul>
+        </article>
+        <article class="path-card">
+          <span class="path-num">Part two</span>
+          <h3>SystemVerilog</h3>
+          <p>Use types, interfaces, classes and concurrency because they solve a specific verification problem. Learn scheduling and signal sampling early. They explain many failures that first look mysterious.</p>
+          <ul><li>Data and process semantics</li><li>Constrained random stimulus</li><li>Practice: model and randomize a packet</li></ul>
+        </article>
+        <article class="path-card">
+          <span class="path-num">Part three</span>
+          <h3>UVM architecture</h3>
+          <p>Understand what each component owns, how transactions move and where checking belongs. Follow one transaction from sequence to pins and back through the monitor before adding more architecture.</p>
+          <ul><li>Agent to scoreboard flow</li><li>Phases and configuration</li><li>Practice: trace one transaction end to end</li></ul>
+        </article>
+        <article class="path-card">
+          <span class="path-num">Part four</span>
+          <h3>Closure and debug</h3>
+          <p>Read coverage as a question about evidence, then localize failures with a repeatable method. Preserve the first bad cycle, challenge the checker and classify every hole before adding more tests.</p>
+          <ul><li>Assertions and coverage</li><li>CDC and root cause analysis</li><li>Practice: explain one root cause clearly</li></ul>
+        </article>
+      </div>
+    </section>
+
+    <section class="section page-panel" id="beginner" data-page="start" aria-labelledby="beginner-title" hidden>
+      <div class="curriculum-intro">
+        <h2 id="beginner-title">A beginner’s guide to design verification.</h2>
+        <p>If you are new to the field, work through these modules in order. Learn enough to build one small testbench, then return to the earlier lessons with the questions that practical work brings.</p>
+      </div>
+      <div class="progress-panel" aria-label="Beginner roadmap progress">
+        <div class="progress-head"><strong>Your progress for this visit</strong><span class="progress-count" id="progress-count">0 of 9 modules</span></div>
+        <div class="progress-track" aria-hidden="true"><div class="progress-fill" id="progress-fill"></div></div>
+        <p class="progress-note">Mark a module after you can explain it without notes. Progress lasts for this visit only, so treat it as a study sprint rather than a permanent score.</p>
+        <div class="celebration" id="roadmap-celebration" hidden>You finished the roadmap. Nice work. Your reward is the most verification shaped compliment I know: your assumptions are now observable.</div>
+      </div>
+      <ol class="roadmap">
+        <li>
+          <div class="module-title"><h3>What verification engineers actually do</h3><p>Begin with the job</p><button class="module-check" type="button" aria-pressed="false">Mark complete</button></div>
+          <div class="module-body"><p>Design engineers build the RTL. Verification engineers build the evidence that the RTL behaves as intended, including at boundaries and under failure conditions. The role exists because a design can compile and still be wrong.</p><ol><li>Learn how a requirement becomes a verification plan.</li><li>Separate stimulus, observation, checking and coverage.</li><li>Understand the difference between a design bug and a testbench bug.</li></ol><div class="module-notes"><div class="module-note"><b>Example</b>A FIFO write on the same cycle as reset is not just a corner case. The specification must say which action wins.</div><div class="module-note"><b>Common mistake</b>Writing tests before deciding what the checker can actually observe.</div><div class="module-note"><b>Practice</b>Take one page of a specification and list five behaviors, three boundaries and two unanswered questions.</div></div></div>
+        </li>
+        <li>
+          <div class="module-title"><h3>Digital design foundations</h3><p>Read the hardware first</p><button class="module-check" type="button" aria-pressed="false">Mark complete</button></div>
+          <div class="module-body"><p>You need enough digital design knowledge to predict what the DUT should do. Start with the behavior you can see at a clock edge, not transistor physics.</p><ol><li>Boolean logic, combinational logic and sequential logic.</li><li>Flip flops, registers, counters and finite state machines.</li><li>Clocks, reset, setup and hold, latency and throughput.</li><li>Basic buses, valid and ready handshakes, FIFO empty and full behavior.</li></ol><div class="module-notes"><div class="module-note"><b>Example</b>If valid stays high while ready is low, the payload normally has to remain stable until the transfer happens.</div><div class="module-note"><b>Common mistake</b>Treating a waveform as decoration instead of tracing state one clock edge at a time.</div><div class="module-note"><b>Practice</b>Draw a four cycle handshake by hand and mark exactly when the transfer is accepted.</div></div></div>
+        </li>
+        <li>
+          <div class="module-title"><h3>SystemVerilog for verification</h3><p>Learn the language in context</p><button class="module-check" type="button" aria-pressed="false">Mark complete</button></div>
+          <div class="module-body"><p>SystemVerilog is both a design language and a verification language. For DV, learn the parts that help you represent transactions, generate varied stimulus and coordinate concurrent work.</p><ol><li>Types, arrays, queues, structs and interfaces.</li><li>Tasks, functions, classes and object handles.</li><li>Processes, events, mailboxes and clocking blocks.</li><li>Randomization, constraints and why a legal random space matters.</li></ol><div class="module-notes"><div class="module-note"><b>Example</b>A queue makes sense for an ordered stream of transactions because its size can grow and items can be popped in order.</div><div class="module-note"><b>Common mistake</b>Jumping into classes before understanding blocking, nonblocking and event scheduling.</div><div class="module-note"><b>Practice</b>Model a packet with a class, constrain its length and print ten legal variations.</div></div></div>
+        </li>
+        <li>
+          <div class="module-title"><h3>Testbench thinking</h3><p>Build a checking loop</p><button class="module-check" type="button" aria-pressed="false">Mark complete</button></div>
+          <div class="module-body"><p>Before UVM, write one small testbench. Drive known inputs, observe the output and compare it with an expected result. This makes the later UVM structure feel necessary instead of ceremonial.</p><ol><li>Write a test plan from a small specification.</li><li>Create a transaction and a simple reference model.</li><li>Drive the interface and monitor what the DUT accepted.</li><li>Make failures clear enough that another engineer can debug them.</li></ol><div class="module-notes"><div class="module-note"><b>Example</b>For an adder, generate operands, predict the sum independently and report the inputs with every mismatch.</div><div class="module-note"><b>Common mistake</b>Calling a test successful because the waveform looks reasonable.</div><div class="module-note"><b>Practice</b>Verify a counter with reset, enable, wraparound and one deliberately broken RTL version.</div></div></div>
+        </li>
+        <li>
+          <div class="module-title"><h3>UVM from scratch</h3><p>Structure first, then behavior</p><button class="module-check" type="button" aria-pressed="false">Mark complete</button></div>
+          <div class="module-body"><p>UVM organizes work you already understand. Learn it in the order the testbench comes to life.</p><ol><li><strong>Build phase:</strong> create components and read configuration.</li><li><strong>Connect phase:</strong> wire ports and exports once components exist.</li><li><strong>Run phase:</strong> let simulation time advance and manage objections.</li><li><strong>Agent:</strong> group a sequencer, driver and monitor for one interface.</li><li><strong>Driver and monitor:</strong> translate transactions to pins and pins back to transactions.</li><li><strong>Sequences:</strong> describe stimulus intent without pin level detail.</li><li><strong>Scoreboard:</strong> compare observed results with a prediction.</li></ol><div class="module-notes"><div class="module-note"><b>Example</b>A monitor should report what the DUT accepted, not what the driver hoped it sent.</div><div class="module-note"><b>Common mistake</b>Learning component names without following one transaction through the entire bench.</div><div class="module-note"><b>Practice</b>Draw sequence, sequencer, driver, monitor and scoreboard. Label every transaction path.</div></div><div class="recommended"><strong>Recommended:</strong><a href="https://silicondv.com/dv-interview-preparation/build-connect-phase-uvm-interview-series" target="_blank" rel="noopener noreferrer">UVM build and connect phase series</a></div></div>
+        </li>
+        <li>
+          <div class="module-title"><h3>SystemVerilog assertions</h3><p>Make timing rules executable</p><button class="module-check" type="button" aria-pressed="false">Mark complete</button></div>
+          <div class="module-body"><p>Assertions are compact checkers for behavior over time. Start by turning one English sentence into a trigger, a timing window and a required response.</p><ol><li>Immediate and concurrent assertions.</li><li>Sequences, properties and sampled values.</li><li>Overlapped and nonoverlapped implication.</li><li>Delay ranges, repetition and reset with <code>disable iff</code>.</li></ol><div class="module-notes"><div class="module-note"><b>Example</b>“Request implies grant within three cycles” needs a precise decision about whether the current cycle counts.</div><div class="module-note"><b>Common mistake</b>Writing one giant property that fails without telling you which rule broke.</div><div class="module-note"><b>Practice</b>Translate three English timing rules, then fail each property on purpose.</div></div><div class="recommended"><strong>Recommended:</strong><a href="https://silicondv.com/dv-interview-preparation" target="_blank" rel="noopener noreferrer">Top 5 SVA questions and answers in the interview hub</a></div></div>
+        </li>
+        <li>
+          <div class="module-title"><h3>CDC basics</h3><p>Preserve information across clocks</p><button class="module-check" type="button" aria-pressed="false">Mark complete</button></div>
+          <div class="module-body"><p>A clock domain crossing problem is not only about metastability. The destination must receive the same information the source intended to send.</p><ol><li>Understand metastability and why simulation alone cannot model it fully.</li><li>Use a synchronizer for a stable single bit level.</li><li>Use a pulse, toggle or handshake scheme for events.</li><li>Use an asynchronous FIFO for a data stream.</li><li>Learn why multi bit reconvergence needs separate attention.</li></ol><div class="module-notes"><div class="module-note"><b>Example</b>A slow destination can miss a one cycle pulse even when metastability is handled.</div><div class="module-note"><b>Common mistake</b>Adding two flops to every crossing without asking what information must survive.</div><div class="module-note"><b>Practice</b>Classify a level, pulse, counter and data stream, then choose a structure for each.</div></div></div>
+        </li>
+        <li>
+          <div class="module-title"><h3>Functional coverage and signoff</h3><p>Ask whether the evidence is enough</p><button class="module-check" type="button" aria-pressed="false">Mark complete</button></div>
+          <div class="module-body"><p>Coverage tells you what your tests exercised. It does not prove correctness by itself. Use it with assertions, checking, code coverage and bug review to decide what remains unknown.</p><ol><li>Write coverpoints for behaviors in the verification plan.</li><li>Add crosses only when the combination has meaning.</li><li>Classify holes as stimulus, observability, model, unreachable or design gaps.</li><li>Review checks, coverage, bugs and waivers before signoff.</li></ol><div class="module-notes"><div class="module-note"><b>Example</b>A missed bin may mean the stimulus never reached a legal case, or that the bin itself describes something impossible.</div><div class="module-note"><b>Common mistake</b>Treating 100 percent as proof that every checked behavior is correct.</div><div class="module-note"><b>Practice</b>Pick five coverage holes and classify each before changing a constraint.</div></div></div>
+        </li>
+        <li>
+          <div class="module-title"><h3>Interview preparation</h3><p>Explain your reasoning out loud</p><button class="module-check" type="button" aria-pressed="false">Mark complete</button></div>
+          <div class="module-body"><p>An interview answer is stronger when you can explain why a method exists, where it fails and how you would debug it. Practice on paper and speak through one transaction from sequence to scoreboard.</p><ol><li>Review digital design and SystemVerilog fundamentals.</li><li>Draw UVM data flow and phase order without notes.</li><li>Write one assertion from an English requirement.</li><li>Explain one real debug method from first failure to root cause.</li><li>Answer with a small example, then name the tradeoff.</li></ol><div class="module-notes"><div class="module-note"><b>Example</b>For every “what is” question, add a “when would you use it” and a “what can go wrong.”</div><div class="module-note"><b>Common mistake</b>Reciting a definition and stopping before the interviewer can hear your judgement.</div><div class="module-note"><b>Practice</b>Record a two minute answer, listen once and remove every sentence that does not help the reasoning.</div></div><div class="recommended"><strong>Recommended:</strong><a href="https://silicondv.com/dv-interview-preparation/dv-core-interview-questions" target="_blank" rel="noopener noreferrer">DV core interview questions</a></div></div>
+        </li>
+      </ol>
+      <div class="curriculum-next">
+        <p>Finished the roadmap once? Use the interview hub to find the concepts you cannot yet explain clearly, then return to the matching module.</p>
+        <a class="button primary" href="https://silicondv.com/dv-interview-preparation" target="_blank" rel="noopener noreferrer">Go to interview preparation</a>
+      </div>
+    </section>
+
+    <section class="section page-panel" data-page="start" aria-label="Featured framework" hidden>
+      <span class="chapter-mark" aria-hidden="true">III</span>
+      <svg class="circuit-rule" viewBox="0 0 280 28" aria-hidden="true"><path d="M1 14h76l11-9h61l12 18h58l10-9h50" fill="none" stroke="currentColor" stroke-width="1"/><circle cx="77" cy="14" r="3" fill="var(--bg)" stroke="currentColor"/><circle cx="149" cy="5" r="3" fill="var(--bg)" stroke="currentColor"/><circle cx="219" cy="23" r="3" fill="var(--bg)" stroke="currentColor"/></svg>
+      <article class="featured">
+        <div>
+          <span class="kicker">A worked example</span>
+          <h2>Turning one requirement into a useful test.</h2>
+          <p class="drop-cap">Take a requirement such as “a full FIFO must reject writes without corrupting stored data.” I do not begin by opening a sequence file. I first turn that sentence into four things I can reason about: the starting state, the action, the visible response and the state that must not change.</p>
+          <p>The phrase “reject writes” is not precise enough on its own. Does the interface lower ready, raise an error or accept the handshake and discard the data? Does the full flag rise on the same edge as the final legal write or one cycle later? Those questions belong in the specification discussion, not in a guess hidden inside the scoreboard.</p>
+          <div class="worked-case">
+            <strong>The concrete test</strong>
+            <p>Use a depth four FIFO and write A, B, C and D. Check that full asserts at the specified time. While full, attempt to write X. Then read four entries and expect A, B, C and D in order, followed by empty. X must never appear, and neither pointer may advance for the rejected transfer.</p>
+          </div>
+          <div class="worked-case">
+            <strong>If it fails</strong>
+            <p>Start at the first bad cycle. If the write pointer moved, the acceptance rule is wrong. If the pointer stayed still but a later read returns X, inspect the memory write enable. If data is correct but full is late, the flag calculation may use stale pointer state. One requirement can expose several distinct bugs.</p>
+          </div>
+        </div>
+        <div class="framework">
+          <div><p><strong>Name the behavior</strong><span>A write attempted while full must not become a stored transaction.</span><em>Question to ask: what exact interface event counts as an attempt?</em></p></div>
+          <div><p><strong>Control the precondition</strong><span>Fill the FIFO to its declared capacity with recognizable values.</span><em>Example: A, B, C and D make ordering errors obvious.</em></p></div>
+          <div><p><strong>Apply one meaningful action</strong><span>Attempt one additional write and keep all unrelated controls quiet.</span><em>Changing only one thing makes the result easier to diagnose.</em></p></div>
+          <div><p><strong>Check response and invariants</strong><span>Check the interface response, pointer stability, occupancy and eventual readback.</span><em>The full flag is one observation, not the whole proof.</em></p></div>
+          <div><p><strong>Record the evidence</strong><span>Cover full with a write attempt and assert that rejected writes do not change state.</span><em>Also retain the directed readback because it checks data integrity.</em></p></div>
+        </div>
+        <p class="framework-takeaway"><strong>Key takeaway:</strong> a good test proves both the visible response and the invariants behind it. If the requirement leaves cycle timing or acceptance semantics unclear, resolve that before encoding the answer in the testbench.</p>
+      </article>
+    </section>
+
+    <section class="section page-panel" id="library" data-page="library" aria-labelledby="library-title" hidden>
+      <span class="chapter-mark" aria-hidden="true">IV</span>
+      <div class="section-head">
+        <h2 id="library-title">Practical notes for the work at hand.</h2>
+        <div><p>This library is organized around the questions engineers ask most often. Search by concept or browse a subject area.</p><p class="margin-note">Desk note: when a concept feels abstract, draw one clock edge and one transaction. Most verification ideas become clearer when you can point to the cycle where they matter.</p></div>
+      </div>
+      <div class="search-panel">
+        <div class="search-row">
+          <label class="search-wrap">
+            <span class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">Search the library</span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-4-4"/></svg>
+            <input id="search" type="search" placeholder="Search reset, scoreboard, CDC, coverage…" autocomplete="off" />
+          </label>
+          <a class="button secondary" href="#reference">Use the quick reference</a>
+        </div>
+        <div class="filters" aria-label="Filter articles">
+          <button class="filter" type="button" data-filter="all" aria-pressed="true">All topics</button>
+          <button class="filter" type="button" data-filter="strategy" aria-pressed="false">Strategy</button>
+          <button class="filter" type="button" data-filter="systemverilog" aria-pressed="false">SystemVerilog</button>
+          <button class="filter" type="button" data-filter="uvm" aria-pressed="false">UVM</button>
+          <button class="filter" type="button" data-filter="debug" aria-pressed="false">Debug</button>
+        </div>
+      </div>
+      <div class="library" id="resource-grid">
+        <article class="resource" data-topic="strategy" data-search="design verification core interview questions verification plan failure modes reset scoreboard coverage">
+          <div class="resource-meta"><span>Interview prep</span><span>Core DV</span></div>
+          <h3>DV core interview questions</h3>
+          <p>These questions are less about recalling definitions and more about showing how you make a verification decision. A useful answer starts with the requirement, names the checker or stimulus mechanism and finishes with the evidence you would inspect.</p>
+          <p class="resource-example"><strong>Try this:</strong> explain reset during traffic for a request and response interface. State what happens to an accepted request, how the monitor recognizes reset and how the scoreboard removes stale expectations.</p>
+          <p class="resource-takeaway"><strong>Keep:</strong> definition, example, tradeoff and debug step. That four part answer is usually stronger than a long list of terms.</p>
+          <a href="#article-interview">Work through the questions</a>
+        </article>
+        <article class="resource" data-topic="systemverilog" data-search="top 5 sva questions answers assertion implication repetition reset sampling">
+          <div class="resource-meta"><span>Interview prep</span><span>SVA</span></div>
+          <h3>Top 5 SVA questions and answers</h3>
+          <p>Assertion syntax becomes much easier when every property is first written as a clocked sentence. Identify the trigger, decide whether the response may happen now or later, define the allowed window and say what reset does to an active attempt.</p>
+          <p class="resource-example"><strong>Try this:</strong> compare <code>|-&gt;</code> and <code>|=&gt;</code> by drawing the trigger at cycle 10. If the response must be true on cycle 10, use overlapped implication. If the earliest legal response is cycle 11, use nonoverlapped implication.</p>
+          <p class="resource-takeaway"><strong>Keep:</strong> never trust a property until you have seen it pass for the right reason and fail on the intended bad trace.</p>
+          <a href="#article-sva">Review the SVA pattern</a>
+        </article>
+        <article class="resource" data-topic="uvm" data-search="uvm build connect phase series parent child port export analysis connection factory topology">
+          <div class="resource-meta"><span>UVM</span><span>Phase series</span></div>
+          <h3>UVM build and connect phase series</h3>
+          <p>Build creates the component hierarchy. Connect wires communication paths after those components exist. Keeping those responsibilities separate makes a missing monitor, a bad configuration path and a disconnected analysis port much easier to distinguish.</p>
+          <p class="resource-example"><strong>Try this:</strong> print the topology before running stimulus. Confirm that the agent contains its sequencer, driver and monitor. Then trace the monitor analysis port to the scoreboard before debugging why no comparisons occur.</p>
+          <p class="resource-takeaway"><strong>Keep:</strong> when the bench is silent, prove that the structure exists before chasing transaction behavior.</p>
+          <a href="#article-uvm">Trace the phases</a>
+        </article>
+        <article class="resource" data-topic="strategy" data-search="assertions sva property implication overlapped nonoverlapped disable iff reset">
+          <div class="resource-meta"><span>Assertions</span><span>Worked pattern</span></div>
+          <h3>Write assertions from English</h3>
+          <p>One property should communicate one timing rule. Split compound requirements so a failure points toward a specific cause. Reset handling also needs to match intent: aborting a property and requiring a reset value are two different checks.</p>
+          <p class="resource-example"><strong>Try this:</strong> for “request gets grant within one to three cycles,” create separate traces where grant arrives at cycles one, two, three and four. The first three should pass. The fourth should fail.</p>
+          <p class="resource-takeaway"><strong>Keep:</strong> write the boundary traces before the property. They force vague timing language to become precise.</p>
+          <a href="#article-sva">Use the template</a>
+        </article>
+        <article class="resource" data-topic="debug" data-search="coverage closure functional code bins crosses unreachable holes waiver">
+          <div class="resource-meta"><span>Coverage</span><span>Closure</span></div>
+          <h3>Classify a coverage hole</h3>
+          <p>An uncovered bin is a question, not an instruction to run more seeds. The scenario may be legal but ungenerated, generated but invisible, impossible by design or missing because the RTL cannot reach the intended state.</p>
+          <p class="resource-example"><strong>Try this:</strong> if full and simultaneous read plus write is uncovered, first prove the FIFO reached full, then confirm the monitor sampled both controls on the acceptance edge. Only after that should you change stimulus.</p>
+          <p class="resource-takeaway"><strong>Keep:</strong> every hole should end with an owner and a reason, not merely a new test name.</p>
+          <a href="#article-coverage">Run the triage</a>
+        </article>
+        <article class="resource" data-topic="debug" data-search="cdc clock domain crossing metastability synchronizer pulse fifo reconvergence">
+          <div class="resource-meta"><span>CDC</span><span>Structures</span></div>
+          <h3>Choose the crossing by information type</h3>
+          <p>The crossing structure depends on what must survive: a stable level, a brief event, a related group of bits or an ordered stream. A pair of synchronizer flops addresses metastability risk for a sampled control, but it does not preserve every kind of information.</p>
+          <p class="resource-example"><strong>Try this:</strong> send a one cycle source pulse into a slower destination clock. If no destination edge sees the pulse, two flops cannot recover it. A toggle or handshake carries the event instead.</p>
+          <p class="resource-takeaway"><strong>Keep:</strong> ask what information the destination must receive before choosing the circuit that crosses it.</p>
+          <a href="#article-cdc">Compare crossings</a>
+        </article>
+      </div>
+      <p class="empty" id="empty-state" hidden>No notes match that search. Try a shorter concept such as “reset”, “UVM” or “coverage”.</p>
+    </section>
+
+    <section class="section page-panel" id="interview" data-page="interview" aria-labelledby="interview-title" hidden>
+      <div class="section-head">
+        <h2 id="interview-title">Interview practice that tests how you think.</h2>
+        <p>A strong answer is not a wall of terminology. I listen for a clear model, one useful example and an honest tradeoff. These are the questions I would use to practise that habit.</p>
+      </div>
+      <div class="answer-set">
+        <details>
+          <summary>When should a check live in an assertion, a scoreboard or both?</summary>
+          <div class="answer"><p>I use an assertion when the rule is local in time and tied closely to an interface or protocol. “Grant arrives within three cycles of request” is a good assertion. I use a scoreboard when the expected result needs state, ordering or a reference model.</p><p>Sometimes both are right. The assertion checks that the protocol stayed legal while the scoreboard checks the end result. I would say that out loud, then give one failure each checker can catch.</p></div>
+        </details>
+        <details>
+          <summary>How would you verify reset in the middle of active traffic?</summary>
+          <div class="answer"><p>I would first ask what the specification promises. Are outstanding transactions dropped, replayed or completed? Which outputs must change immediately and which change on a clock edge?</p><p>Then I would reset at different points in a transaction, check state cleanup, confirm no stale response escapes and verify the first legal transaction after reset. The common mistake is checking only that registers become zero. Reset is a behavior, not just a value.</p></div>
+        </details>
+        <details>
+          <summary>A random regression fails once in one thousand seeds. What do you do first?</summary>
+          <div class="answer"><p>I preserve the seed, tool version, configuration and first failing message before changing anything. Then I reproduce the smallest failing run and work backwards from the first bad observation, not from the final scoreboard complaint.</p><p>I also compare the failing and passing traces near the divergence. Adding debug everywhere too early can make the failure slower to understand. One precise hypothesis at a time usually wins.</p></div>
+        </details>
+        <details>
+          <summary>What does 100 percent functional coverage prove?</summary>
+          <div class="answer"><p>It proves that every modeled bin was sampled. That is useful, but it does not prove the model was complete, the checker was correct or the design behaved properly when the bin was hit.</p><p>I would review the coverage model against the verification plan, look at meaningful crosses, inspect assertion results and close known bug and waiver questions. A full dashboard can still hide a weak argument.</p></div>
+        </details>
+        <details>
+          <summary>How do you debug a scoreboard mismatch?</summary>
+          <div class="answer"><p>I start with the earliest mismatch and ask four things: was the input transaction observed correctly, did the reference model predict the right value, did the output monitor sample the right cycle and did the queue preserve ordering?</p><p>Only then do I blame the DUT. Scoreboards are excellent at reporting disagreement, but they do not automatically tell us which side is wrong. That distinction matters in real debug.</p></div>
+        </details>
+      </div>
+      <div class="quiz-head"><h3>Quick flip quiz</h3><p>Choose a card, answer aloud, then reveal my version.</p></div>
+      <div class="quiz-grid">
+        <button class="quiz-card" type="button" aria-pressed="false" aria-label="Reveal answer about UVM monitors">
+          <span class="quiz-inner"><span class="quiz-face front"><span>Question one</span><strong>Why should a UVM monitor be passive?</strong><small>Tap to reveal</small></span><span class="quiz-face back"><span>My answer</span><p>Its job is to observe what actually happened. If it drives the interface, it changes the behavior it is supposed to report and makes debug much harder.</p></span></span>
+        </button>
+        <button class="quiz-card" type="button" aria-pressed="false" aria-label="Reveal answer about CDC pulses">
+          <span class="quiz-inner"><span class="quiz-face front"><span>Question two</span><strong>Why can a two flop synchronizer miss a pulse?</strong><small>Tap to reveal</small></span><span class="quiz-face back"><span>My answer</span><p>It reduces metastability risk for a sampled level, but a short pulse may never overlap a destination clock edge. Stretch, toggle or handshake based on the event rate.</p></span></span>
+        </button>
+        <button class="quiz-card" type="button" aria-pressed="false" aria-label="Reveal answer about constraints">
+          <span class="quiz-inner"><span class="quiz-face front"><span>Question three</span><strong>What makes a random constraint useful?</strong><small>Tap to reveal</small></span><span class="quiz-face back"><span>My answer</span><p>It describes the legal space without quietly removing the difficult cases. I check distributions and coverage, because a solver can satisfy the code while missing the intent.</p></span></span>
+        </button>
+      </div>
+    </section>
+
+    <section class="section page-panel" id="ai-verification" data-page="ai-verification" aria-labelledby="ai-title" hidden>
+      <div class="section-head">
+        <h2 id="ai-title">Where AI helps verification, and where I do not trust it.</h2>
+        <p>I work on AI assisted verification because the useful question is not whether a model can produce code. It is whether the result helps an engineer reach better evidence without hiding a mistake.</p>
+      </div>
+      <div class="insight-grid">
+        <article class="insight-card"><span class="label">UVM bring up</span><h3>Use AI to get past the blank file, not past review.</h3><p>A model can sketch a transaction class, sequence or agent structure quickly. I find that useful when the interface contract is already clear.</p><p>The review still belongs to the engineer. I check factory registration, phase behavior, objections, reset handling, analysis connections and whether the monitor reports accepted traffic. Code that compiles can still encode the wrong architecture.</p></article>
+        <article class="insight-card"><span class="label">From my IEEE paper</span><h3>Regression optimization is a ranking problem before it is an AI problem.</h3><p>My work studied AI assisted regression optimization. In plain language, the goal is to spend simulation time on tests that are likely to add useful information, rather than treating every test as equally valuable.</p><p>The important part is the feedback loop. Test history, coverage movement and failure behavior have to be represented carefully. A model can help prioritize; it cannot decide that unobserved behavior is safe.</p></article>
+        <article class="insight-card"><span class="label">Failure modes</span><h3>Fluent code is not the same as correct verification.</h3><p>AI often produces something plausible before it produces something precise. It can invent signal names, misunderstand a reset convention, overconstrain random stimulus or write an assertion with the wrong cycle semantics.</p><p>I treat every generated line as an unreviewed suggestion. If I cannot explain what requirement it checks and make it fail on purpose, it does not belong in the bench.</p></article>
+      </div>
+      <div class="lab-note"><strong>A small rule from the lab</strong><p>Ask the model to state its assumptions before it writes code. The assumptions are often more useful than the first answer, and they give you something concrete to challenge.</p></div>
+    </section>
+
+    <section class="section page-panel" id="reference" data-page="reference" aria-labelledby="reference-title" hidden>
+      <span class="chapter-mark" aria-hidden="true">VII</span>
+      <svg class="circuit-rule" viewBox="0 0 280 28" aria-hidden="true"><path d="M1 14h44l9-9h46l14 18h53l12-9h100" fill="none" stroke="currentColor" stroke-width="1"/><circle cx="45" cy="14" r="3" fill="var(--bg)" stroke="currentColor"/><circle cx="100" cy="5" r="3" fill="var(--bg)" stroke="currentColor"/><circle cx="167" cy="23" r="3" fill="var(--bg)" stroke="currentColor"/></svg>
+      <div class="section-head">
+        <h2 id="reference-title">Quick reference with the reasoning behind each rule.</h2>
+        <div><p>Keep this beside your code, but do not stop at the rule. Each note explains what the rule protects, how to apply it and what a useful failure looks like.</p><p class="margin-note">Field note: a compact rule is useful only when you remember the failure that taught it. Open the notes below for the reasoning, not just the syntax.</p></div>
+      </div>
+      <div class="article-stack">
+        <article class="article" id="article-interview">
+          <header class="article-heading"><strong>Five core DV interview questions to reason through</strong><span>INTERVIEW PREP</span></header>
+          <div class="article-body">
+            <div class="reference-copy">
+              <p>I do not memorize a perfect answer. I use a simple shape: clarify the requirement, choose a mechanism, give one concrete example and name the evidence or tradeoff.</p>
+              <h4>A sample answer</h4>
+              <p>For “assertion or scoreboard,” I would say that an assertion suits a local timing rule such as grant within three cycles. A scoreboard suits an ordered result that needs prediction and state. On a bus agent I may use both because protocol legality and data correctness are different questions.</p>
+              <p class="key-takeaway"><strong>Key takeaway:</strong> the interviewer is listening for judgement. Show why you chose the technique and what you would inspect when it fails.</p>
+            </div>
+            <ol><li>When should a check be an assertion, a scoreboard comparison or both?</li><li>What makes a constrained random test useful rather than merely random?</li><li>How would you verify reset in the middle of active traffic?</li><li>A regression fails once in one thousand seeds. How do you preserve and localize it?</li><li>What does 100 percent functional coverage prove, and what does it not prove?</li></ol>
+          </div>
+        </article>
+        <article class="article" id="article-spec">
+          <header class="article-heading"><strong>Specification extraction checklist</strong><span>STRATEGY</span></header>
+          <div class="article-body">
+            <div class="reference-copy">
+              <p>I use this before writing a test plan. The goal is to separate stated behavior from assumptions and to expose the conditions that are easy to miss in normal traffic.</p>
+              <h4>Practical example</h4>
+              <p>For a FIFO, “supports simultaneous read and write” is incomplete. Ask whether it applies at empty and full, whether occupancy changes, what data appears on the output and when flags update. Each answer becomes either a test, an assertion or a coverage point.</p>
+              <p class="key-takeaway"><strong>Key takeaway:</strong> an unanswered question is safer in a review list than as silent behavior inside a reference model.</p>
+            </div>
+            <ol><li>List inputs, outputs and persistent state.</li><li>Mark every clock and reset domain.</li><li>Write legal state transitions and forbidden transitions.</li><li>For each command, record acceptance, response latency and backpressure.</li><li>Define behavior at empty, full, minimum, maximum and simultaneous events.</li><li>Note what must remain unchanged when an action is rejected.</li><li>Record unspecified cases as questions and assign an owner.</li></ol>
+          </div>
+        </article>
+        <article class="article" id="article-sv">
+          <header class="article-heading"><strong>Race resistant clocked stimulus</strong><span>SYSTEMVERILOG</span></header>
+          <div class="article-body">
+            <div class="reference-copy">
+              <p>A clocking block declares when the testbench samples and drives interface signals relative to a clock event. That removes accidental dependence on simulator scheduling order and makes driver and monitor intent visible in the interface.</p>
+              <h4>How I use it</h4>
+              <p>The driver writes through clocking block outputs. The monitor reads clocking block inputs. I still decide the protocol timing explicitly. A clocking block prevents a race; it does not decide whether request should remain high until grant.</p>
+              <p class="key-takeaway"><strong>Key takeaway:</strong> consistent sampling removes testbench ambiguity, so a cycle mismatch is more likely to expose a real protocol misunderstanding.</p>
+            </div>
+            <div><div class="code-block"><button class="copy-btn" type="button">Copy</button><pre><code>clocking cb @(posedge clk);
+  default input #1step output #0;
+  output req, wdata;
+  input  gnt, rdata;
+endclocking
+
+cb.req   &lt;= 1'b1;
+cb.wdata &lt;= payload;
+@cb;
+if (cb.gnt) begin
+  // The monitor sees a stable sampled value.
+end</code></pre></div><div class="mini-example"><strong>Check it deliberately:</strong> drive request near the active edge once without the clocking block and once through it. Compare which sampled value the DUT and monitor see.</div></div>
+          </div>
+        </article>
+        <article class="article" id="article-uvm">
+          <header class="article-heading"><strong>Build phase and connect phase</strong><span>UVM</span></header>
+          <div class="article-body">
+            <div class="reference-copy">
+              <p>I think of build as creating the testbench structure and connect as wiring communication after that structure exists. This is not ceremony. It gives structural failures a predictable place.</p>
+              <h4>A useful debug order</h4>
+              <p>If the scoreboard receives nothing, first print the topology. Then confirm the monitor exists and has the expected virtual interface. Next inspect the analysis port connection. Only after those checks should you debug transaction contents.</p>
+              <p class="key-takeaway"><strong>Key takeaway:</strong> prove hierarchy, configuration and connectivity before blaming run phase behavior.</p>
+            </div>
+            <ol><li><strong>Build phase:</strong> create child components with the factory, read configuration and choose active or passive structure.</li><li><strong>Parent before child:</strong> the parent creates the children that UVM will build next.</li><li><strong>Connect phase:</strong> connect sequencer and driver paths, ports, exports and analysis paths.</li><li><strong>Topology check:</strong> confirm every expected component and instance name.</li><li><strong>Configuration check:</strong> verify the path used to set a virtual interface matches the path used to get it.</li><li><strong>Common mistake:</strong> using <code>new</code> for components removes useful factory override behavior.</li></ol>
+          </div>
+        </article>
+        <article class="article" id="article-sva">
+          <header class="article-heading"><strong>An assertion sentence template</strong><span>SVA</span></header>
+          <div class="article-body">
+            <div class="reference-copy">
+              <p>Say the requirement first: “When request rises, grant must arrive one to three cycles later, unless reset is active.” Then map the clock, reset, trigger, implication and response window one phrase at a time.</p>
+              <h4>Boundary traces</h4>
+              <p>Write four tiny waveforms before coding. Grant at one, two and three cycles must pass. Grant at four cycles must fail. Also test a request just before reset so you know whether the active attempt should be aborted.</p>
+              <p class="key-takeaway"><strong>Key takeaway:</strong> operators are easier to choose after the pass and fail boundaries are unambiguous.</p>
+            </div>
+            <div><div class="code-block"><button class="copy-btn" type="button">Copy</button><pre><code>property p_req_gets_grant;
+  @(posedge clk)
+  disable iff (!rst_n)
+  $rose(req) |-&gt; ##[1:3] grant;
+endproperty
+
+a_req_gets_grant:
+  assert property (p_req_gets_grant);</code></pre></div><div class="mini-example"><strong>Watch for vacuity:</strong> if request never rises, this property can pass without testing the response. Add coverage for the trigger and successful completion.</div></div>
+          </div>
+        </article>
+        <article class="article" id="article-coverage">
+          <header class="article-heading"><strong>Coverage hole triage</strong><span>CLOSURE</span></header>
+          <div class="article-body">
+            <div class="reference-copy">
+              <p>Do not write a new random test until you know what kind of hole you are looking at. Start with one uncovered bin and trace the evidence from stimulus to accepted interface event to monitor sample.</p>
+              <h4>Practical example</h4>
+              <p>Suppose the cross of full, read and write is empty. A transaction log may show both commands were generated, while the interface trace shows read was blocked before acceptance. That is a stimulus or sequencing issue, not a covergroup issue.</p>
+              <p class="key-takeaway"><strong>Key takeaway:</strong> coverage closure is an investigation. The outcome can be a new test, a monitor fix, a model correction, a design bug or a justified exclusion.</p>
+            </div>
+            <ul><li><strong>Stimulus hole:</strong> a legal scenario was never accepted. Adjust constraints or write a focused sequence.</li><li><strong>Observability hole:</strong> the scenario happened but the monitor or covergroup missed it.</li><li><strong>Model hole:</strong> the bin does not represent a real requirement. Repair the model.</li><li><strong>Unreachable hole:</strong> prove the condition cannot occur, then document the exclusion.</li><li><strong>Design hole:</strong> intended behavior cannot be reached because the RTL is wrong.</li><li><strong>Review question:</strong> would hitting this bin add evidence, or only improve the percentage?</li></ul>
+          </div>
+        </article>
+        <article class="article" id="article-cdc">
+          <header class="article-heading"><strong>CDC structure chooser</strong><span>CDC</span></header>
+          <div class="article-body">
+            <div class="reference-copy">
+              <p>A synchronizer does not make CDC safe in general. First name what crosses and what the destination must preserve. Then choose a structure and verify its protocol assumptions.</p>
+              <h4>Practical example</h4>
+              <p>A one cycle pulse from a 200 MHz source can fall entirely between edges of a 50 MHz destination. Two flops reduce metastability risk only if an edge samples the level. A toggle converts the event into a persistent state change; a handshake also provides backpressure when events may arrive quickly.</p>
+              <p class="key-takeaway"><strong>Key takeaway:</strong> metastability, event loss, incoherent data and reconvergence are related but different failure modes.</p>
+            </div>
+            <ul><li><strong>Stable single bit level:</strong> use a multi flip flop synchronizer and verify the source stays stable long enough.</li><li><strong>Brief event:</strong> stretch, toggle or handshake so the destination cannot miss it.</li><li><strong>Multi bit control:</strong> preserve relationships between bits and analyze reconvergence.</li><li><strong>Ordered payload:</strong> use a handshake or asynchronous FIFO with control synchronized separately.</li><li><strong>Reset crossing:</strong> asynchronous assertion may be required, but deassertion must be controlled in each domain.</li><li><strong>Verification check:</strong> vary clock ratio and phase, then check for loss, duplication and reordering.</li></ul>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section page-panel" id="practice" data-page="practice" aria-label="Practice method" hidden>
+      <span class="chapter-mark" aria-hidden="true">VIII</span>
+      <svg class="circuit-rule" viewBox="0 0 280 28" aria-hidden="true"><path d="M1 14h58l12-9h42l14 18h64l12-9h76" fill="none" stroke="currentColor" stroke-width="1"/><circle cx="59" cy="14" r="3" fill="var(--bg)" stroke="currentColor"/><circle cx="113" cy="5" r="3" fill="var(--bg)" stroke="currentColor"/><circle cx="191" cy="23" r="3" fill="var(--bg)" stroke="currentColor"/></svg>
+      <div class="practice-grid">
+        <div class="practice-note">
+          <h2>Build sound judgement through deliberate practice.</h2>
+          <p>Use a small design whose state you can predict by hand. A counter, arbiter or tiny FIFO is enough. The aim is not merely a green test. It is a clear argument that the design satisfies its intent and a debug trail that tells you why it does not.</p>
+          <p>My favorite exercise is a depth four FIFO with one intentional bug. I write the expected occupancy and pointer values for each cycle before I open the waveform. That forces me to reason from the protocol instead of searching visually for anything unusual.</p>
+          <p>Keep the design small until the reasoning becomes automatic. Complexity can hide weak checking. A ten signal block with a precise testbench teaches more than a large subsystem where success means only that simulation finished.</p>
+        </div>
+        <div class="loop">
+          <div class="loop-item"><b>01</b><div><strong>Predict</strong><span>Write the expected state transition, accepted transaction and output before simulation. If you cannot predict it, clarify the requirement first.</span></div></div>
+          <div class="loop-item"><b>02</b><div><strong>Break</strong><span>Introduce one fault or choose one boundary on purpose. Keep every other variable quiet so the result remains explainable.</span></div></div>
+          <div class="loop-item"><b>03</b><div><strong>Observe</strong><span>Decide which assertion, monitor or scoreboard comparison should detect the fault and on which cycle.</span></div></div>
+          <div class="loop-item"><b>04</b><div><strong>Explain</strong><span>Write the first bad cycle, expected behavior, observed behavior and likely cause in one precise paragraph.</span></div></div>
+        </div>
+        <div class="practice-workshop">
+          <h3>A forty five minute FIFO practice session</h3>
+          <div class="practice-session">
+            <div><b>Minutes 0 to 10</b><strong>Write the contract</strong><p>Define depth, reset values, flag timing and the behavior of simultaneous read and write at empty and full.</p></div>
+            <div><b>Minutes 10 to 20</b><strong>Build one clean check</strong><p>Maintain a queue as the expected model. Add data only on an accepted write and remove data only on an accepted read.</p></div>
+            <div><b>Minutes 20 to 35</b><strong>Attack one boundary</strong><p>Fill to capacity, attempt overflow, read everything back and confirm the rejected value never appears.</p></div>
+            <div><b>Minutes 35 to 45</b><strong>Break and explain</strong><p>Delay the full flag or allow one extra pointer increment. Predict the first failing cycle, run once and compare your prediction.</p></div>
+          </div>
+          <div class="practice-ledger">
+            <div><h4>Keep a verification ledger</h4><p>For each session, save the requirement, your prediction, the checker that fired and the final root cause. This becomes a much better study record than a folder of code that once passed.</p></div>
+            <ul><li><strong>Requirement:</strong> what behavior were you trying to prove?</li><li><strong>Failure injected:</strong> what changed in the RTL or stimulus?</li><li><strong>First bad cycle:</strong> where did expected and observed behavior diverge?</li><li><strong>Detection:</strong> which checker caught it, and did it report enough context?</li><li><strong>Next improvement:</strong> what assumption or visibility gap did the exercise reveal?</li></ul>
+          </div>
+          <p class="key-takeaway"><strong>Key takeaway:</strong> practice is complete when you can predict, detect and explain the failure. Passing the clean design is only the starting point.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section page-panel" id="about" data-page="about" aria-labelledby="about-title" hidden>
+      <div class="about">
+        <div>
+          <h2 id="about-title">Why I built SiliconDV</h2>
+          <div class="about-aside"><strong>What you will find here</strong><p>Start with the beginner path if you are new. Use the interview questions when you want to practise explaining. Keep the reference notes open when you are writing or debugging code.</p></div>
+        </div>
+        <div class="about-copy">
+          <p>I built SiliconDV because I wanted one place where a verification concept is explained all the way through. Not just the definition, but why it exists, how it behaves in a testbench and what tends to go wrong when the simulation gets interesting.</p>
+          <p>I am Abinaya Senthil, a Design Verification Engineer at NXP Semiconductors in Austin, where I work on verification for automotive SoCs. I earned my master’s degree in Electrical and Computer Engineering from Boston University. Those details give me a point of view, but this site is not meant to be a résumé. It is where I write down the explanations, examples and questions that I have found genuinely useful.</p>
+          <p>My technical interests sit where practical verification meets better ways of working. I published an IEEE paper on AI assisted regression optimization, and I keep exploring how AI can support UVM bring up, debug and verification planning without replacing engineering judgement. I am interested in the failures too. Especially the confident looking ones.</p>
+          <p>Outside the day job, I serve on the DAC Women in Technology committee and have judged award nominees. I have spoken at TechWorks in London and Verification Futures in Austin. SiliconDV began as a learning community on LinkedIn and has grown to more than 10,000 followers. What I value most is still simple: when an engineer tells me that an explanation finally made a difficult idea click.</p>
+          <p>I will keep adding material as I learn, teach and test these ideas in practice. If a note cannot help you reason through a design, write a clearer checker or debug with less guessing, it needs more work.</p>
+          <p><small>I write here in a personal capacity. The views and examples on SiliconDV are my own and do not represent my employer.</small></p>
+          <div class="principles" aria-label="Editorial principles">
+            <div class="principle">Begin with intent</div>
+            <div class="principle">Name the failure</div>
+            <div class="principle">Show the evidence</div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <span>Clear, practical design verification notes for working engineers.</span>
+    <span>SystemVerilog · UVM · SVA · Coverage · CDC</span>
+  </footer>
+  <div class="toast" id="toast" role="status" aria-live="polite">Copied to clipboard</div>
+
+  <script>
+    (function () {
+      var panels = Array.prototype.slice.call(document.querySelectorAll('.page-panel'));
+      var pageTrail = document.getElementById('page-trail');
+      var trailCurrent = document.getElementById('trail-current');
+      var navLinks = Array.prototype.slice.call(document.querySelectorAll('[data-nav-page]'));
+      var pageNames = {
+        home: 'All topics',
+        start: 'Start Here · Beginner Roadmap',
+        interview: 'Interview Preparation',
+        'ai-verification': 'AI in Verification',
+        library: 'Library',
+        reference: 'Quick Reference',
+        practice: 'Practice Workshop',
+        about: 'About'
+      };
+      var anchorPages = {
+        paths: 'start', beginner: 'start',
+        'article-interview': 'reference', 'article-spec': 'reference', 'article-sv': 'reference',
+        'article-uvm': 'reference', 'article-sva': 'reference', 'article-coverage': 'reference', 'article-cdc': 'reference'
+      };
+
+      function resolvePage(hash) {
+        var target = (hash || '#home').slice(1);
+        if (!target) return 'home';
+        if (pageNames[target]) return target;
+        return anchorPages[target] || 'home';
+      }
+
+      function showPage(options) {
+        options = options || {};
+        var targetId = (window.location.hash || '#home').slice(1) || 'home';
+        var page = resolvePage(window.location.hash);
+        panels.forEach(function (panel) {
+          panel.hidden = panel.dataset.page !== page;
+        });
+        pageTrail.hidden = page === 'home';
+        if (page !== 'home') trailCurrent.textContent = pageNames[page];
+        navLinks.forEach(function (link) {
+          var current = link.dataset.navPage === page || (link.dataset.navPage === 'home' && page === 'home');
+          if (current) link.setAttribute('aria-current', 'page');
+          else link.removeAttribute('aria-current');
+        });
+        document.title = page === 'home' ? 'SiliconDV | Practical design verification' : pageNames[page] + ' | SiliconDV';
+        var exactTarget = document.getElementById(targetId);
+        var destination = anchorPages[targetId] && exactTarget && !exactTarget.hidden ? exactTarget : pageTrail;
+        window.setTimeout(function () {
+          if (page === 'home') window.scrollTo({ top: 0, behavior: 'auto' });
+          else destination.scrollIntoView({ behavior: 'auto', block: 'start' });
+          if (page !== 'home') {
+            var heading = document.querySelector('.page-panel[data-page="' + page + '"]:not([hidden]) h1, .page-panel[data-page="' + page + '"]:not([hidden]) h2');
+            if (heading) {
+              heading.setAttribute('tabindex', '-1');
+              heading.focus({ preventScroll: true });
+            }
+          }
+        }, 0);
+      }
+
+      window.addEventListener('hashchange', function () { showPage(); });
+      showPage({ instant: true });
+
+      var search = document.getElementById('search');
+      var filters = Array.prototype.slice.call(document.querySelectorAll('.filter'));
+      var cards = Array.prototype.slice.call(document.querySelectorAll('.resource'));
+      var empty = document.getElementById('empty-state');
+      var active = 'all';
+
+      function applyFilters() {
+        var term = search.value.trim().toLowerCase();
+        var shown = 0;
+        cards.forEach(function (card) {
+          var topicMatch = active === 'all' || card.dataset.topic === active;
+          var text = (card.dataset.search + ' ' + card.textContent).toLowerCase();
+          var searchMatch = !term || text.indexOf(term) !== -1;
+          card.hidden = !(topicMatch && searchMatch);
+          if (!card.hidden) shown += 1;
+        });
+        empty.hidden = shown !== 0;
+      }
+
+      filters.forEach(function (button) {
+        button.addEventListener('click', function () {
+          active = button.dataset.filter;
+          filters.forEach(function (item) {
+            item.setAttribute('aria-pressed', item === button ? 'true' : 'false');
+          });
+          applyFilters();
+        });
+      });
+      search.addEventListener('input', applyFilters);
+
+      var toast = document.getElementById('toast');
+      var toastTimer;
+      document.querySelectorAll('.copy-btn').forEach(function (button) {
+        button.addEventListener('click', function () {
+          var text = button.nextElementSibling.innerText;
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(text).then(showToast);
+          } else {
+            var area = document.createElement('textarea');
+            area.value = text;
+            area.style.position = 'fixed';
+            area.style.opacity = '0';
+            document.body.appendChild(area);
+            area.select();
+            document.execCommand('copy');
+            area.remove();
+            showToast();
+          }
+        });
+      });
+      function showToast(message) {
+        clearTimeout(toastTimer);
+        toast.textContent = typeof message === 'string' ? message : 'Copied to clipboard';
+        toast.classList.add('show');
+        toastTimer = setTimeout(function () { toast.classList.remove('show'); }, 1800);
+      }
+
+      var terms = [
+        { name: 'Observability', text: 'How easily an internal behavior can be seen at an output, monitor or checker. If a bug happens but nothing notices, you do not have enough observability.' },
+        { name: 'Controllability', text: 'How precisely a testbench can place the design into a useful state. Good controllability turns a rare corner case into a repeatable test.' },
+        { name: 'Vacuity', text: 'An assertion can pass because its trigger never happened. A green result is not meaningful until you know the property had a real chance to fail.' },
+        { name: 'Reconvergence', text: 'Signals cross or travel separately and later meet again. Small timing differences can create combinations the source never intended.' },
+        { name: 'Seed', text: 'The value that makes a random test repeatable. Save it with every failure before touching the testbench.' }
+      ];
+      var termIndex = Math.floor(Date.now() / 86400000) % terms.length;
+      var termName = document.getElementById('term-name');
+      var termDefinition = document.getElementById('term-definition');
+      var nextTerm = document.getElementById('next-term');
+      function showTerm() {
+        termName.textContent = terms[termIndex].name;
+        termDefinition.textContent = terms[termIndex].text;
+      }
+      showTerm();
+      nextTerm.addEventListener('click', function () {
+        termIndex = (termIndex + 1) % terms.length;
+        showTerm();
+      });
+
+      var moduleButtons = Array.prototype.slice.call(document.querySelectorAll('.module-check'));
+      var progressCount = document.getElementById('progress-count');
+      var progressFill = document.getElementById('progress-fill');
+      var celebration = document.getElementById('roadmap-celebration');
+      function updateProgress() {
+        var done = moduleButtons.filter(function (button) { return button.getAttribute('aria-pressed') === 'true'; }).length;
+        progressCount.textContent = done + ' of ' + moduleButtons.length + ' modules';
+        progressFill.style.width = ((done / moduleButtons.length) * 100) + '%';
+        celebration.hidden = done !== moduleButtons.length;
+        if (done === moduleButtons.length) showToast('Roadmap complete. Nicely verified.');
+      }
+      moduleButtons.forEach(function (button) {
+        button.addEventListener('click', function () {
+          var complete = button.getAttribute('aria-pressed') === 'true';
+          button.setAttribute('aria-pressed', complete ? 'false' : 'true');
+          button.textContent = complete ? 'Mark complete' : 'Completed';
+          updateProgress();
+        });
+      });
+
+      document.querySelectorAll('.quiz-card').forEach(function (card) {
+        card.addEventListener('click', function () {
+          var revealed = card.getAttribute('aria-pressed') === 'true';
+          card.setAttribute('aria-pressed', revealed ? 'false' : 'true');
+        });
+      });
+
+      var doodle = document.getElementById('doodle-testbench');
+      var doodleStatus = document.getElementById('doodle-status');
+      var doodleTimer;
+      doodle.addEventListener('click', function () {
+        clearTimeout(doodleTimer);
+        doodle.classList.remove('is-running');
+        void doodle.offsetWidth;
+        doodle.classList.add('is-running');
+        doodle.setAttribute('aria-pressed', 'true');
+        doodleStatus.textContent = 'Driving stimulus… watching the checker…';
+        doodleTimer = setTimeout(function () {
+          doodleStatus.textContent = 'PASS · 4 of 4 checks accounted for.';
+          doodle.setAttribute('aria-pressed', 'false');
+        }, 1250);
+      });
+    }());
+  </script>
+</body>
+</html>
