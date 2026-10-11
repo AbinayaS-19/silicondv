@@ -3,9 +3,12 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="color-scheme" content="light" />
-  <meta name="theme-color" content="#f4eddf" />
+  <meta name="color-scheme" content="light dark" />
+  <meta name="theme-color" content="#ffffff" />
   <link rel="icon" href="data:," />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Source+Sans+3:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet" />
   <title>SiliconDV | Practical design verification</title>
   <meta name="description" content="Practical, open learning notes for SystemVerilog, UVM, assertions, coverage, CDC and verification strategy." />
   <!-- Google tag (gtag.js) -->
@@ -316,6 +319,66 @@
     .lab-note p { margin: 6px 0 0; color: var(--muted); }
     .answer-set { display: grid; gap: 10px; margin-bottom: 34px; }
     .answer-set details { border: 1px solid var(--line); background: color-mix(in srgb, var(--surface) 75%, transparent); }
+    .guide-jump {
+      display: flex; flex-wrap: wrap; gap: 0; margin: 0 0 46px;
+      border-top: 1px solid var(--signal); border-bottom: 1px solid var(--line);
+    }
+    .guide-jump a {
+      padding: 11px 14px; color: var(--accent); text-decoration: none;
+      border-right: 1px solid var(--line); font-size: .68rem; font-weight: 750;
+      letter-spacing: .1em; text-transform: uppercase;
+    }
+    .guide-jump a:hover, .guide-jump a:focus-visible { background: var(--accent-soft); }
+    .question-group { scroll-margin-top: 88px; padding: 38px 0 12px; border-top: 1px solid var(--signal); }
+    .question-group + .question-group { margin-top: 30px; }
+    .question-group-head { display: grid; grid-template-columns: 90px minmax(0, 1fr); gap: 24px; margin-bottom: 22px; }
+    .question-group-head span { color: var(--signal); font: 700 .7rem/1.5 var(--mono); letter-spacing: .12em; }
+    .question-group-head h3 { margin: 0; font: 500 clamp(1.8rem, 3.6vw, 2.8rem)/1.08 var(--serif); }
+    .interview-question { display: grid; grid-template-columns: minmax(240px, .7fr) minmax(0, 1.3fr); gap: clamp(24px, 5vw, 58px); padding: 28px 0; border-top: 1px solid var(--line); }
+    .interview-question h4 { margin: 0; font: 500 1.35rem/1.28 var(--serif); }
+    .interview-question .answer-copy > p { margin: 0; color: var(--muted); }
+    .interview-question .answer-copy > p + p { margin-top: 10px; }
+    .answer-notes { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin-top: 18px; }
+    .answer-note { padding-top: 11px; border-top: 1px solid var(--line); color: var(--muted); font-size: .88rem; line-height: 1.58; }
+    .answer-note strong { display: block; margin-bottom: 4px; color: var(--accent); font-size: .67rem; letter-spacing: .1em; text-transform: uppercase; }
+    .interview-tip { margin-top: 14px; color: var(--accent-strong); font: italic 500 .96rem/1.56 var(--serif); }
+    .uvm-lead { display: grid; grid-template-columns: minmax(0, .8fr) minmax(300px, 1.2fr); gap: clamp(30px, 7vw, 82px); align-items: start; margin-bottom: 52px; }
+    .uvm-lead h2 { margin: 0; font: 500 clamp(2.35rem, 5vw, 4.4rem)/1.03 var(--serif); letter-spacing: -.035em; }
+    .uvm-lead p { margin: 8px 0 0; color: var(--muted); font-size: 1.05rem; }
+    .uvm-flow { display: grid; grid-template-columns: repeat(5, 1fr); border-top: 1px solid var(--signal); border-bottom: 1px solid var(--line); margin-bottom: 62px; }
+    .uvm-flow div { min-height: 126px; padding: 18px 14px; border-right: 1px solid var(--line); }
+    .uvm-flow div:last-child { border-right: 0; }
+    .uvm-flow b { display: block; color: var(--signal); font: 700 .68rem/1.4 var(--mono); }
+    .uvm-flow strong { display: block; margin-top: 12px; font: 500 1.05rem/1.2 var(--serif); }
+    .uvm-flow span { display: block; margin-top: 6px; color: var(--muted); font-size: .8rem; line-height: 1.45; }
+    .uvm-chapter { scroll-margin-top: 88px; padding: 44px 0; border-top: 1px solid var(--signal); }
+    .uvm-chapter-head { display: grid; grid-template-columns: 80px minmax(0, .55fr) minmax(280px, .75fr); gap: 24px; align-items: start; margin-bottom: 28px; }
+    .uvm-chapter-head > span { color: var(--signal); font: 700 .7rem/1.5 var(--mono); letter-spacing: .12em; }
+    .uvm-chapter-head h3 { margin: 0; font: 500 clamp(1.7rem, 3.2vw, 2.55rem)/1.08 var(--serif); }
+    .uvm-chapter-head p { margin: 0; color: var(--muted); }
+    .component-list { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid var(--line); }
+    .component-item { padding: 22px 22px 24px 0; border-bottom: 1px solid var(--line); }
+    .component-item:nth-child(3n+2), .component-item:nth-child(3n+3) { padding-left: 22px; border-left: 1px solid var(--line); }
+    .component-item b { color: var(--accent); font: 500 1.15rem/1.25 var(--serif); }
+    .component-item p { margin: 8px 0 0; color: var(--muted); font-size: .9rem; }
+    .component-item em { display: block; margin-top: 10px; color: var(--ink); font: italic 500 .86rem/1.5 var(--serif); }
+    .phase-ledger { display: grid; grid-template-columns: repeat(3, 1fr); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+    .phase-ledger article { padding: 24px; border-right: 1px solid var(--line); }
+    .phase-ledger article:last-child { border-right: 0; }
+    .phase-ledger h4 { margin: 0 0 10px; font: 500 1.3rem/1.2 var(--serif); }
+    .phase-ledger p { margin: 0; color: var(--muted); font-size: .9rem; }
+    .phase-ledger ul { margin: 14px 0 0; padding-left: 1.05rem; color: var(--muted); font-size: .86rem; }
+    .phase-ledger li + li { margin-top: 6px; }
+    .uvm-split { display: grid; grid-template-columns: minmax(0, 1fr) minmax(300px, .9fr); gap: 34px; align-items: start; }
+    .uvm-split .reference-copy h4:first-child { margin-top: 0; }
+    .confusion-list { border-top: 1px solid var(--line); }
+    .confusion { display: grid; grid-template-columns: .7fr 1.3fr; gap: 22px; padding: 18px 0; border-bottom: 1px solid var(--line); }
+    .confusion strong { font: 500 1rem/1.35 var(--serif); }
+    .confusion p { margin: 0; color: var(--muted); font-size: .9rem; }
+    .interview-map { display: grid; grid-template-columns: repeat(2, 1fr); gap: 0 30px; border-top: 1px solid var(--line); }
+    .interview-map div { padding: 18px 0; border-bottom: 1px solid var(--line); }
+    .interview-map b { display: block; color: var(--accent); font-size: .75rem; letter-spacing: .08em; text-transform: uppercase; }
+    .interview-map p { margin: 7px 0 0; color: var(--muted); }
     .answer-set summary { cursor: pointer; padding: 18px 20px; font: 500 1.12rem/1.4 var(--serif); }
     .answer-set .answer { border-top: 1px solid var(--line); padding: 18px 20px; color: var(--muted); }
     .answer p { margin: 0; }
@@ -536,6 +599,10 @@
     #library::after { content: "04 / 09"; }
     #interview::before { content: "Interview practice"; }
     #interview::after { content: "05 / 09"; }
+    #uvm::before { content: "UVM learning guide"; }
+    #uvm::after { content: "Deep guide"; }
+    #open-specs::before { content: "Open Spec Library"; }
+    #open-specs::after { content: "Five practice blocks"; }
     #ai-verification::before { content: "AI in verification"; }
     #ai-verification::after { content: "06 / 09"; }
     #reference::before { content: "Quick reference"; }
@@ -737,6 +804,15 @@
       .resource:nth-child(3), .resource:nth-child(5) { transform: none; }
       .insight-grid, .quiz-grid { grid-template-columns: 1fr 1fr; }
       .module-notes { grid-template-columns: 1fr; }
+      .interview-question, .uvm-lead, .uvm-split { grid-template-columns: 1fr; }
+      .uvm-flow { grid-template-columns: repeat(3, 1fr); }
+      .uvm-flow div:nth-child(3) { border-right: 0; }
+      .uvm-flow div:nth-child(-n+3) { border-bottom: 1px solid var(--line); }
+      .component-list { grid-template-columns: repeat(2, 1fr); }
+      .component-item:nth-child(n) { padding-left: 0; padding-right: 20px; border-left: 0; }
+      .component-item:nth-child(2n) { padding-left: 20px; padding-right: 0; border-left: 1px solid var(--line); }
+      .uvm-chapter-head { grid-template-columns: 60px 1fr; }
+      .uvm-chapter-head p { grid-column: 2; }
       .practice-session { grid-template-columns: repeat(2, 1fr); }
       .practice-session div:nth-child(2) { border-right: 0; }
       .practice-session div:nth-child(-n+2) { border-bottom: 1px solid var(--line); }
@@ -763,6 +839,15 @@
       .library, .insight-grid, .quiz-grid { grid-template-columns: 1fr; }
       .resource:nth-child(n) { border-right: 0; }
       .article:nth-child(even) { margin-left: 0; }
+      .guide-jump a { width: 50%; border-bottom: 1px solid var(--line); }
+      .question-group-head { grid-template-columns: 46px 1fr; gap: 12px; }
+      .answer-notes { grid-template-columns: 1fr; gap: 10px; }
+      .uvm-flow, .component-list, .phase-ledger, .interview-map { grid-template-columns: 1fr; }
+      .uvm-flow div, .uvm-flow div:nth-child(3), .phase-ledger article { border-right: 0; border-bottom: 1px solid var(--line); }
+      .uvm-flow div:last-child, .phase-ledger article:last-child { border-bottom: 0; }
+      .component-item:nth-child(n) { padding: 18px 0; border-left: 0; }
+      .uvm-chapter-head { grid-template-columns: 38px 1fr; gap: 12px; }
+      .confusion { grid-template-columns: 1fr; gap: 7px; }
       .chapter-mark { right: 4px; top: 58px; font-size: 5rem; }
       .circuit-rule { width: 58%; margin-bottom: 22px; }
       .featured { padding-top: 54px; }
@@ -786,6 +871,178 @@
       .chip-friend, .gate-friend, .score-friend, .scope-friend, .doodle-eye, .wave-runner, .packet, .spark,
       .doodle-button.is-running .packet, .doodle-button.is-running .score-friend, .doodle-button.is-running .score-arm,
       .doodle-button.is-running .confetti { animation: none !important; }
+    }
+
+    .spec-intro { display: grid; grid-template-columns: minmax(0, .82fr) minmax(300px, 1.18fr); gap: clamp(32px, 7vw, 82px); align-items: start; margin-bottom: 42px; }
+    .spec-intro h2 { margin: 0; font: 500 clamp(2.35rem, 5vw, 4.4rem)/1.03 var(--serif); letter-spacing: -.035em; }
+    .spec-intro p { margin: 8px 0 0; color: var(--muted); font-size: 1.04rem; }
+    .spec-how { display: grid; grid-template-columns: repeat(4, 1fr); border-top: 1px solid var(--signal); border-bottom: 1px solid var(--line); margin-bottom: 58px; }
+    .spec-how div { padding: 18px; border-right: 1px solid var(--line); }
+    .spec-how div:last-child { border-right: 0; }
+    .spec-how b { display: block; color: var(--signal); font: 700 .68rem/1.4 var(--mono); }
+    .spec-how strong { display: block; margin-top: 9px; font: 500 1.05rem/1.25 var(--serif); }
+    .spec-how p { margin: 6px 0 0; color: var(--muted); font-size: .83rem; line-height: 1.5; }
+    .spec-entry { scroll-margin-top: 88px; padding: 50px 0; border-top: 1px solid var(--signal); }
+    .spec-entry-head { display: grid; grid-template-columns: 100px minmax(0, .78fr) minmax(260px, .72fr); gap: 24px; align-items: start; }
+    .spec-code { color: var(--accent); font: 700 .69rem/1.5 var(--mono); letter-spacing: .1em; }
+    .spec-entry h3 { margin: 0; font: 500 clamp(1.9rem, 3.5vw, 2.8rem)/1.05 var(--serif); }
+    .difficulty { display: inline-block; margin-top: 12px; padding: 5px 9px; background: var(--accent-soft); color: var(--accent-strong); border: 1px solid var(--marigold); font: 700 .64rem/1.2 var(--sans); letter-spacing: .1em; text-transform: uppercase; }
+    .spec-overview { margin: 0; color: var(--muted); }
+    .spec-detail-grid { display: grid; grid-template-columns: minmax(0, .82fr) minmax(0, 1.18fr); gap: 34px; margin-top: 28px; }
+    .spec-features { margin: 0; padding-left: 1.1rem; color: var(--muted); }
+    .spec-features li + li { margin-top: 7px; }
+    .spec-block-title { margin: 0 0 10px; color: var(--accent); font-size: .69rem; font-weight: 750; letter-spacing: .12em; text-transform: uppercase; }
+    .spec-table { width: 100%; border-collapse: collapse; table-layout: fixed; font-size: .84rem; }
+    .spec-table th, .spec-table td { padding: 9px 10px; border-top: 1px solid var(--line); text-align: left; vertical-align: top; overflow-wrap: anywhere; }
+    .spec-table th { color: var(--accent); font-size: .65rem; letter-spacing: .08em; text-transform: uppercase; }
+    .spec-table th:first-child, .spec-table td:first-child { width: 28%; }
+    .spec-table th:nth-child(2), .spec-table td:nth-child(2) { width: 24%; }
+    .spec-table td { color: var(--muted); }
+    .spec-table code { color: var(--ink); }
+    .spec-practice { margin-top: 28px; padding: 20px 22px; background: var(--accent-soft); border-top: 1px solid var(--marigold); }
+    .spec-practice strong { color: var(--accent-strong); font: 500 1.08rem var(--serif); }
+    .spec-practice p { margin: 7px 0 0; color: var(--muted); }
+    .spec-entry .button { margin-top: 22px; }
+    .spec-license { margin-top: 44px; padding: 24px 0; border-top: 1px solid var(--signal); border-bottom: 1px solid var(--line); display: flex; justify-content: space-between; gap: 28px; align-items: center; }
+    .spec-license p { margin: 0; color: var(--muted); max-width: 760px; }
+    @media (max-width: 900px) {
+      .spec-intro, .spec-detail-grid { grid-template-columns: 1fr; }
+      .spec-entry-head { grid-template-columns: 72px 1fr; }
+      .spec-entry-head .spec-overview { grid-column: 2; }
+      .spec-how { grid-template-columns: repeat(2, 1fr); }
+      .spec-how div:nth-child(2) { border-right: 0; }
+      .spec-how div:nth-child(-n+2) { border-bottom: 1px solid var(--line); }
+    }
+    @media (max-width: 650px) {
+      .spec-entry-head { grid-template-columns: 1fr; gap: 12px; }
+      .spec-entry-head .spec-overview { grid-column: auto; }
+      .spec-how { grid-template-columns: 1fr; }
+      .spec-how div { border-right: 0; border-bottom: 1px solid var(--line); }
+      .spec-how div:last-child { border-bottom: 0; }
+      .spec-table { font-size: .75rem; }
+      .spec-table th, .spec-table td { padding: 7px 6px; }
+      .spec-license { align-items: stretch; flex-direction: column; }
+      .spec-license .button { width: 100%; }
+    }
+
+    .newsletter-top[hidden], .newsletter-inline[hidden], .newsletter-slide[hidden] { display: none !important; }
+    .newsletter-top {
+      width: min(1160px, calc(100% - 40px)); margin: 16px auto 0; padding: 16px 44px 16px 18px;
+      position: relative; display: grid; grid-template-columns: minmax(220px, 1fr) minmax(360px, .9fr); gap: 22px; align-items: center;
+      background: var(--accent-soft); border-top: 2px solid var(--vermilion); border-bottom: 1px solid var(--marigold);
+    }
+    .newsletter-top p { margin: 0; color: var(--ink); font: 500 1rem/1.5 var(--serif); }
+    .newsletter-top p strong { color: var(--leaf); }
+    .newsletter-top-close { position: absolute; top: 8px; right: 10px; border: 0; background: transparent; color: var(--accent-strong); cursor: pointer; font: 700 1rem var(--sans); }
+    .newsletter-top .newsletter-form { grid-template-columns: 1fr auto; }
+    .newsletter-inline {
+      width: min(1160px, calc(100% - 40px)); margin: 0 auto 74px; padding: 30px 0;
+      border-top: 2px solid var(--vermilion); border-bottom: 1px solid var(--line);
+      display: grid; grid-template-columns: minmax(0, 1fr) minmax(320px, .9fr); gap: clamp(26px, 6vw, 72px); align-items: center;
+    }
+    .newsletter-copy h2 { margin: 0; font: 500 clamp(1.8rem, 3.5vw, 2.8rem)/1.08 var(--serif); }
+    .newsletter-copy p { margin: 10px 0 0; color: var(--muted); }
+    .newsletter-free { color: var(--leaf); font-weight: 750; }
+    .newsletter-form { display: grid; grid-template-columns: 1fr auto; gap: 9px; }
+    .newsletter-form input { min-width: 0; min-height: 46px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); padding: 0 13px; outline: none; }
+    .newsletter-form input:focus { border-color: var(--vermilion); outline: 3px solid color-mix(in srgb, var(--marigold) 45%, transparent); outline-offset: 1px; }
+    .newsletter-form .button { white-space: nowrap; }
+    .newsletter-form-note { grid-column: 1 / -1; margin: 0; color: var(--muted); font-size: .76rem; }
+    .newsletter-confirmation { padding: 15px 0; color: var(--leaf); font: 500 1.15rem/1.5 var(--serif); }
+    .newsletter-slide {
+      position: fixed; z-index: 40; right: 20px; bottom: 20px; width: min(390px, calc(100% - 28px));
+      padding: 24px; background: var(--accent-soft); color: var(--ink); border: 2px solid var(--vermilion);
+      transform: translateY(24px); opacity: 0; transition: transform .2s ease, opacity .2s ease;
+    }
+    .newsletter-slide.show { transform: translateY(0); opacity: 1; }
+    .newsletter-slide-close { position: absolute; top: 9px; right: 10px; border: 0; background: transparent; color: var(--accent-strong); cursor: pointer; font: 700 1.1rem var(--sans); }
+    .newsletter-slide h2 { margin: 0 28px 8px 0; font: 500 1.55rem/1.15 var(--serif); }
+    .newsletter-slide > p { margin: 0 0 16px; color: var(--muted); font-size: .9rem; }
+    .newsletter-slide .newsletter-form { grid-template-columns: 1fr; }
+    .newsletter-slide .newsletter-form .button { width: 100%; }
+    @media (max-width: 760px) {
+      .newsletter-top { width: min(100% - 28px, 1160px); grid-template-columns: 1fr; padding: 15px 38px 15px 15px; }
+      .newsletter-top .newsletter-form { grid-template-columns: 1fr; }
+      .newsletter-inline { width: min(100% - 28px, 1160px); grid-template-columns: 1fr; }
+      .newsletter-form { grid-template-columns: 1fr; }
+      .newsletter-form .button { width: 100%; }
+      .newsletter-slide { right: 14px; bottom: 14px; }
+    }
+
+    /* Bright editorial palette and refined typography */
+    :root {
+      color-scheme: light dark;
+      --bg: #ffffff;
+      --surface: #ffffff;
+      --surface-2: #ffffff;
+      --ink: #432d25;
+      --muted: #745b50;
+      --line: #eadbd3;
+      --accent: #d94620;
+      --accent-strong: #a92d18;
+      --accent-soft: #fff4d5;
+      --signal: #347d3d;
+      --marigold: #dca313;
+      --vermilion: #d94620;
+      --leaf: #347d3d;
+      --code-bg: #4a2e25;
+      --code-ink: #fffaf0;
+      --reverse-bg: #d94620;
+      --reverse-ink: #fffaf2;
+      --shadow: none;
+      --serif: "Cormorant Garamond", "Iowan Old Style", Baskerville, Georgia, serif;
+      --sans: "Source Sans 3", "Avenir Next", Avenir, Candara, sans-serif;
+    }
+    body { background-image: none; font-weight: 400; letter-spacing: .004em; }
+    h1, h2, h3, h4, .doodle-word { text-wrap: balance; }
+    p, li { text-wrap: pretty; }
+    .topbar { background: var(--bg); border-bottom-color: var(--line); backdrop-filter: none; }
+    .hero-diagram, .featured, .doodle-button { background-image: none; box-shadow: none; }
+    .hero-diagram, .path-card, .resource, .article, .loop-item, .insight-card, .topic-card, .contact-form { box-shadow: none; }
+    .featured { background-color: var(--reverse-bg); color: var(--reverse-ink); border-color: var(--accent-strong); }
+    .featured .kicker, .framework div::before, .worked-case strong, .framework-takeaway strong { color: #ffe08a; }
+    .featured > div > p, .framework span, .worked-case p, .framework-takeaway { color: var(--reverse-ink); }
+    .button.primary, .module-check[aria-pressed="true"], .filter[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: #fff8f2; }
+    .quiz-face.back { background: var(--reverse-bg); color: var(--reverse-ink); border-color: var(--accent); }
+    .quiz-face.back p { color: var(--reverse-ink); }
+    .code-block { background: var(--code-bg); color: var(--code-ink); }
+    .copy-btn { background: #302b26; border-color: #756b62; color: var(--code-ink); }
+    .drop-cap::first-letter { color: var(--vermilion); }
+    .doodle-gold { stroke: var(--marigold); }
+    .doodle-gold-fill { fill: var(--accent-soft); stroke: var(--marigold); }
+    .doodle-wine { stroke: var(--vermilion); }
+    .doodle-wine-fill { fill: var(--accent-soft); stroke: var(--vermilion); }
+    .doodle-button::before, .doodle-button::after { background: var(--accent-soft); border-color: var(--marigold); }
+    .status-dot { background: var(--leaf); }
+    .topic-card:nth-child(4) { background: var(--leaf); color: #fff8dd; border-color: #2f6f34; }
+    .topic-card:nth-child(4) p { color: #f6f0cb; }
+    .topic-card:nth-child(4) .topic-card-number, .topic-card:nth-child(4) .topic-card-action { color: #ffe37e; }
+    .recommended, .mini-example, .practice-note, .about-aside, .contact-note { background: var(--accent-soft); }
+    @media (hover: hover) { .topic-card:nth-child(4):hover { background: #34783a; } }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #281c18;
+        --surface: #33231e;
+        --surface-2: #3a2923;
+        --ink: #fff7ed;
+        --muted: #d9c4b8;
+        --line: #6d4d41;
+        --accent: #ff7950;
+        --accent-strong: #ff9a75;
+        --accent-soft: #4a3521;
+        --signal: #80c77b;
+        --marigold: #ffc94b;
+        --vermilion: #ff7950;
+        --leaf: #80c77b;
+        --code-bg: #1e1512;
+        --code-ink: #fffaf0;
+        --reverse-bg: #b83c22;
+        --reverse-ink: #fffaf2;
+      }
+      .button.primary, .module-check[aria-pressed="true"], .filter[aria-pressed="true"] { color: #fffaf2; }
+      .topic-card:nth-child(4) { background: #34723a; border-color: #80c77b; }
+      .topic-card:nth-child(4) p { color: #f5eddc; }
+      .copy-btn { background: #3b2922; border-color: #8e6858; }
     }
   </style>
 </head>
@@ -874,11 +1131,26 @@
     <a href="#home">All topics</a><span class="trail-arrow" aria-hidden="true">/</span><span id="trail-current">Start here</span>
   </div>
 
+  <aside class="newsletter-top" id="newsletter-top" aria-label="Newsletter signup" hidden>
+    <button class="newsletter-top-close" id="newsletter-top-close" type="button" aria-label="Dismiss newsletter signup">×</button>
+    <p>Get one short email a week with new guides and interview questions. <strong>Free forever, and everything here stays open.</strong></p>
+    <div>
+      <form class="newsletter-form" id="newsletter-top-form" action="https://formsubmit.co/abiamra98@gmail.com" method="POST" target="newsletter-top-response">
+        <input type="hidden" name="_subject" value="New SiliconDV newsletter signup" /><input type="hidden" name="_template" value="table" /><input type="hidden" name="_captcha" value="false" />
+        <label for="newsletter-top-email" class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">Email address</label>
+        <input id="newsletter-top-email" name="email" type="email" autocomplete="email" placeholder="you@example.com" required />
+        <button class="button primary" type="submit">Subscribe</button>
+        <p class="newsletter-form-note">No gate. No clutter. Just the weekly note.</p>
+      </form>
+      <div class="newsletter-confirmation" id="newsletter-top-confirmation" role="status" tabindex="-1" hidden>You are in! First email lands this week.</div>
+      <iframe name="newsletter-top-response" id="newsletter-top-response" title="Newsletter signup response" hidden></iframe>
+    </div>
+  </aside>
+
   <main id="content">
     <section class="topic-index page-panel" data-page="home" aria-labelledby="topic-index-title">
       <div class="topic-index-head">
         <div>
-          <p class="eyebrow">Choose the question you are trying to answer.</p>
           <h1 id="topic-index-title">Open a topic. Learn it all the way through.</h1>
         </div>
         <p>This is a working notebook for design verification. Begin at the start, prepare for an interview, look up a detail or spend a focused practice session with one small design.</p>
@@ -891,35 +1163,45 @@
         </a>
         <a class="topic-card" href="#interview" style="--card-number:'02'">
           <span class="topic-card-number">Explain your thinking</span><h2>Interview preparation</h2>
-          <p>Practise the questions that reveal judgement, with model answers, tradeoffs and flip cards you can answer aloud before checking.</p>
+          <p>Practise questions across DV fundamentals, SystemVerilog, UVM, SVA, CDC and coverage, with examples, follow ups and the mistakes I see most often.</p>
           <span class="topic-card-action">Practise now</span>
         </a>
-        <a class="topic-card" href="#ai-verification" style="--card-number:'03'">
+        <a class="topic-card" href="#uvm" style="--card-number:'03'">
+          <span class="topic-card-number">Follow one transaction</span><h2>UVM learning guide</h2>
+          <p>Build the architecture piece by piece, understand the phases and trace stimulus from a sequence to the DUT and back into checking.</p>
+          <span class="topic-card-action">Learn UVM</span>
+        </a>
+        <a class="topic-card" href="#open-specs" style="--card-number:'04'">
+          <span class="topic-card-number">Build from a real specification</span><h2>Open Spec Library</h2>
+          <p>Pick one of five free hardware specifications, write the testbench and assertions, then check your work against the verification objectives.</p>
+          <span class="topic-card-action">Choose a project</span>
+        </a>
+        <a class="topic-card" href="#ai-verification" style="--card-number:'05'">
           <span class="topic-card-number">Engineer stays in charge</span><h2>AI in verification</h2>
           <p>See where AI can shorten bring up and regression work, where it fails confidently and what still needs careful engineering review.</p>
           <span class="topic-card-action">Read the field notes</span>
         </a>
-        <a class="topic-card" href="#library" style="--card-number:'04'">
+        <a class="topic-card" href="#library" style="--card-number:'06'">
           <span class="topic-card-number">Browse and search</span><h2>Library</h2>
           <p>Find practical notes on verification strategy, SystemVerilog, UVM, debug, coverage and CDC, each with an example worth trying.</p>
           <span class="topic-card-action">Enter the library</span>
         </a>
-        <a class="topic-card" href="#reference" style="--card-number:'05'">
+        <a class="topic-card" href="#reference" style="--card-number:'07'">
           <span class="topic-card-number">Keep beside your code</span><h2>Quick reference</h2>
           <p>Use compact checklists and code patterns without losing the reasoning that makes each rule useful.</p>
           <span class="topic-card-action">Open the reference</span>
         </a>
-        <a class="topic-card" href="#practice" style="--card-number:'06'">
+        <a class="topic-card" href="#practice" style="--card-number:'08'">
           <span class="topic-card-number">Forty five focused minutes</span><h2>Practice workshop</h2>
           <p>Take a small FIFO from written intent to prediction, checking, an intentional fault and a clear root cause.</p>
           <span class="topic-card-action">Start the workshop</span>
         </a>
-        <a class="topic-card" href="#about" style="--card-number:'07'">
+        <a class="topic-card" href="#about" style="--card-number:'09'">
           <span class="topic-card-number">The person behind the notes</span><h2>About</h2>
           <p>Meet Abinaya and read why SiliconDV is built around intent, failure modes and evidence instead of definitions alone.</p>
           <span class="topic-card-action">Read the story</span>
         </a>
-        <a class="topic-card" href="#contact" style="--card-number:'08'">
+        <a class="topic-card" href="#contact" style="--card-number:'10'">
           <span class="topic-card-number">Start a conversation</span><h2>Contact</h2>
           <p>Have a verification question, a topic you want me to cover or an idea worth discussing? Send me a note.</p>
           <span class="topic-card-action">Write to me</span>
@@ -1027,7 +1309,7 @@
         </li>
         <li>
           <div class="module-title"><h3>UVM from scratch</h3><p>Structure first, then behavior</p><button class="module-check" type="button" aria-pressed="false">Mark complete</button></div>
-          <div class="module-body"><p>UVM organizes work you already understand. Learn it in the order the testbench comes to life.</p><ol><li><strong>Build phase:</strong> create components and read configuration.</li><li><strong>Connect phase:</strong> wire ports and exports once components exist.</li><li><strong>Run phase:</strong> let simulation time advance and manage objections.</li><li><strong>Agent:</strong> group a sequencer, driver and monitor for one interface.</li><li><strong>Driver and monitor:</strong> translate transactions to pins and pins back to transactions.</li><li><strong>Sequences:</strong> describe stimulus intent without pin level detail.</li><li><strong>Scoreboard:</strong> compare observed results with a prediction.</li></ol><div class="module-notes"><div class="module-note"><b>Example</b>A monitor should report what the DUT accepted, not what the driver hoped it sent.</div><div class="module-note"><b>Common mistake</b>Learning component names without following one transaction through the entire bench.</div><div class="module-note"><b>Practice</b>Draw sequence, sequencer, driver, monitor and scoreboard. Label every transaction path.</div></div><div class="recommended"><strong>Recommended:</strong><a href="https://silicondv.com/dv-interview-preparation/build-connect-phase-uvm-interview-series" target="_blank" rel="noopener noreferrer">UVM build and connect phase series</a></div></div>
+          <div class="module-body"><p>UVM organizes work you already understand. Learn it in the order one transaction moves through the bench, not as a list of class names.</p><ol><li><strong>Test and environment:</strong> the test chooses the scenario and configuration. The environment owns reusable agents, scoreboards and models.</li><li><strong>Agent:</strong> group a sequencer, driver and monitor for one interface. A passive agent keeps the monitor but does not drive.</li><li><strong>Sequence path:</strong> a sequence creates an item, the sequencer arbitrates it and the driver converts it into pin activity.</li><li><strong>Observation path:</strong> the monitor reconstructs what the DUT accepted and publishes transactions through an analysis port.</li><li><strong>Checking path:</strong> the scoreboard predicts, aligns and compares results. RAL models register intent and mirror observed state.</li><li><strong>Build phase:</strong> create components with the factory and read configuration.</li><li><strong>Connect phase:</strong> wire transaction paths after every endpoint exists.</li><li><strong>Run phase:</strong> advance time, drive traffic, observe responses and manage objections from the test or virtual sequence.</li></ol><div class="module-notes"><div class="module-note"><b>Example</b>A monitor should report what the DUT accepted, not what the driver hoped it sent. If ready is low, the monitor should not publish the transaction yet.</div><div class="module-note"><b>Common mistake</b>Starting a sequence successfully and assuming the driver received the item. Trace <code>start_item</code>, <code>finish_item</code>, <code>get_next_item</code> and <code>item_done</code>.</div><div class="module-note"><b>Practice</b>Draw sequence, sequencer, driver, interface, monitor and scoreboard. Label each TLM connection and the owner of every objection.</div></div><div class="recommended"><strong>Continue here:</strong><a href="#uvm">Open the complete UVM learning guide</a></div></div>
         </li>
         <li>
           <div class="module-title"><h3>SystemVerilog assertions</h3><p>Make timing rules executable</p><button class="module-check" type="button" aria-pressed="false">Mark complete</button></div>
@@ -1127,7 +1409,7 @@
           <p>Build creates the component hierarchy. Connect wires communication paths after those components exist. Keeping those responsibilities separate makes a missing monitor, a bad configuration path and a disconnected analysis port much easier to distinguish.</p>
           <p class="resource-example"><strong>Try this:</strong> print the topology before running stimulus. Confirm that the agent contains its sequencer, driver and monitor. Then trace the monitor analysis port to the scoreboard before debugging why no comparisons occur.</p>
           <p class="resource-takeaway"><strong>Keep:</strong> when the bench is silent, prove that the structure exists before chasing transaction behavior.</p>
-          <a href="#article-uvm">Trace the phases</a>
+          <a href="#uvm">Open the complete UVM guide</a>
         </article>
         <article class="resource" data-topic="strategy" data-search="assertions sva property implication overlapped nonoverlapped disable iff reset">
           <div class="resource-meta"><span>Assertions</span><span>Worked pattern</span></div>
@@ -1184,6 +1466,95 @@
           <div class="answer"><p>I start with the earliest mismatch and ask four things: was the input transaction observed correctly, did the reference model predict the right value, did the output monitor sample the right cycle and did the queue preserve ordering?</p><p>Only then do I blame the DUT. Scoreboards are excellent at reporting disagreement, but they do not automatically tell us which side is wrong. That distinction matters in real debug.</p></div>
         </details>
       </div>
+
+      <nav class="guide-jump" aria-label="Interview question topics">
+        <a href="#iq-fundamentals">DV fundamentals</a><a href="#iq-sv">SystemVerilog</a><a href="#iq-uvm">UVM</a><a href="#iq-sva">SVA</a><a href="#iq-cdc">CDC</a><a href="#iq-coverage">Coverage</a><a href="#iq-scenarios">Scenarios</a>
+      </nav>
+
+      <section class="question-group" id="iq-fundamentals" aria-labelledby="iq-fundamentals-title">
+        <div class="question-group-head"><span>01 / 07</span><h3 id="iq-fundamentals-title">DV fundamentals</h3></div>
+        <article class="interview-question">
+          <h4>How do you turn a specification into a verification plan?</h4>
+          <div class="answer-copy"><p>I start with observable behavior, not test names. For every requirement I write the precondition, the accepted action, the expected response, the timing window and the state that must remain unchanged. Then I decide whether stimulus, an assertion, a scoreboard or coverage is the right evidence.</p><p>For a depth four FIFO, “reject a write while full” becomes a fill sequence, one extra write attempt, a stable pointer check, four ordered reads and a coverage point for the attempted overflow. I also record open questions instead of hiding an assumption in the reference model.</p><div class="answer-notes"><div class="answer-note"><strong>Common follow up</strong>How do you know the plan is complete? Trace every requirement to at least one check and one coverage item, then review boundaries, reset and simultaneous events.</div><div class="answer-note"><strong>Mistake candidates make</strong>Listing directed test names without saying what each test proves. A long list is not a verification strategy.</div></div><p class="interview-tip"><strong>Interview tip:</strong> take one small requirement and walk it all the way from intent to evidence. That shows more judgement than naming five methodologies.</p></div>
+        </article>
+        <article class="interview-question">
+          <h4>What is the difference between a testbench bug and a design bug?</h4>
+          <div class="answer-copy"><p>A mismatch only proves disagreement. I separate the paths. First I confirm that the monitor sampled the accepted input correctly. Then I check the reference model, expected queue, output sampling and comparison timing. If the independent expectation is sound and the DUT diverges, I have a design bug. If the expectation or observation is wrong, I have a testbench bug.</p><p>Suppose a scoreboard reports the wrong FIFO data. The RTL may have reordered entries, but the monitor may also have sampled on the wrong edge or the scoreboard may have popped the expected queue before a real read handshake.</p><div class="answer-notes"><div class="answer-note"><strong>Common follow up</strong>What evidence would you save? The seed, first mismatch, accepted input history, expected queue state and a narrow waveform around the first divergence.</div><div class="answer-note"><strong>Mistake candidates make</strong>Blaming the DUT because the scoreboard printed an error. The checker is code too.</div></div><p class="interview-tip"><strong>Interview tip:</strong> say “first bad cycle” early. It tells the interviewer that you debug causes rather than symptoms.</p></div>
+        </article>
+      </section>
+
+      <section class="question-group" id="iq-sv" aria-labelledby="iq-sv-title">
+        <div class="question-group-head"><span>02 / 07</span><h3 id="iq-sv-title">SystemVerilog</h3></div>
+        <article class="interview-question">
+          <h4>When do you use blocking and nonblocking assignments in a testbench?</h4>
+          <div class="answer-copy"><p>I use blocking assignments for sequential software style calculation inside a task or function when each statement should see the previous result immediately. I use nonblocking assignments for clocked signal updates when I want the value scheduled without creating a race with other processes on the same edge.</p><p>In a driver, I prefer a clocking block and write through its outputs. That makes the sampling and driving skew explicit. The answer is not simply “blocking for combinational and nonblocking for sequential” because testbench code also depends on simulator regions.</p><div class="answer-notes"><div class="answer-note"><strong>Common follow up</strong>What problem does a clocking block solve? It gives the testbench a defined relationship between sampling, driving and the clock event.</div><div class="answer-note"><strong>Mistake candidates make</strong>Repeating an RTL rule without discussing races between the DUT, driver and monitor.</div></div><p class="interview-tip"><strong>Interview tip:</strong> draw one rising edge and say when the DUT samples, when the driver updates and when the monitor observes.</p></div>
+        </article>
+        <article class="interview-question">
+          <h4>What makes a constrained random test useful?</h4>
+          <div class="answer-copy"><p>A useful constraint describes the legal space while keeping important boundaries reachable. Randomness is only a stimulus strategy. It becomes valuable when coverage tells me which legal behaviors were exercised and when the seed makes a failure repeatable.</p><p>For a packet length from one to 64 bytes, I may keep every value legal but bias the distribution toward one, two, 63 and 64. I still inspect the sampled distribution because a solver can satisfy my code while my intent remains underrepresented.</p><div class="answer-notes"><div class="answer-note"><strong>Common follow up</strong>How do you debug a randomize failure? Isolate the active constraints, inspect conflicting relationships and reduce the object to the smallest unsatisfied set.</div><div class="answer-note"><strong>Mistake candidates make</strong>Overconstraining the stimulus until only normal traffic remains, then calling the regression comprehensive.</div></div><p class="interview-tip"><strong>Interview tip:</strong> mention legality, distribution, reproducibility and coverage. Those four words show you understand the whole loop.</p></div>
+        </article>
+      </section>
+
+      <section class="question-group" id="iq-uvm" aria-labelledby="iq-uvm-title">
+        <div class="question-group-head"><span>03 / 07</span><h3 id="iq-uvm-title">UVM</h3></div>
+        <article class="interview-question">
+          <h4>Walk one transaction from a sequence to the scoreboard.</h4>
+          <div class="answer-copy"><p>The sequence creates and randomizes an item, then sends it through the sequencer. The sequencer arbitrates between active sequences. The driver gets the item, converts it into pin activity and calls <code>item_done</code> only when it has finished consuming that item.</p><p>The monitor independently samples the interface and publishes the transaction through an analysis port. A predictor or scoreboard receives it, updates expected state and compares the observed response. I keep the monitor independent because the scoreboard should check what the DUT accepted, not what the sequence intended.</p><div class="answer-notes"><div class="answer-note"><strong>Common follow up</strong>Where does a response go? The driver can return a response item through the sequencer when the sequence needs protocol level feedback.</div><div class="answer-note"><strong>Mistake candidates make</strong>Connecting the scoreboard directly to the driver and losing an independent observation path.</div></div><p class="interview-tip"><strong>Interview tip:</strong> draw arrows while you answer. Name the request path and observation path separately.</p></div>
+        </article>
+        <article class="interview-question">
+          <h4>Why use the factory and configuration database?</h4>
+          <div class="answer-copy"><p>The factory lets a test replace a registered type without editing the reusable environment. I use it for controlled variation, such as substituting an error injecting driver or a specialized sequence item. The configuration database passes settings or handles down the hierarchy without hard coding a parent reference into every child.</p><p>For example, the top level sets a virtual interface for <code>uvm_test_top.env.agent*</code>, and the driver and monitor retrieve it during build. I keep paths narrow because a wildcard that reaches too much of the bench can create hidden coupling.</p><div class="answer-notes"><div class="answer-note"><strong>Common follow up</strong>Why might an override fail? The class was not registered, the requested type was created with <code>new</code>, or the instance path did not match.</div><div class="answer-note"><strong>Mistake candidates make</strong>Using the configuration database as a global variable store and making ownership impossible to trace.</div></div><p class="interview-tip"><strong>Interview tip:</strong> give one reason to use each mechanism and one reason not to overuse it.</p></div>
+        </article>
+      </section>
+
+      <section class="question-group" id="iq-sva" aria-labelledby="iq-sva-title">
+        <div class="question-group-head"><span>04 / 07</span><h3 id="iq-sva-title">SystemVerilog assertions</h3></div>
+        <article class="interview-question">
+          <h4>What is the difference between overlapped and nonoverlapped implication?</h4>
+          <div class="answer-copy"><p>With <code>|-&gt;</code>, the consequent begins on the same sampled cycle where the antecedent completes. With <code>|=&gt;</code>, it begins on the next sampled cycle. I do not choose from memory alone. I draw the trigger and the earliest legal response.</p><p>If valid and ready must never be high together, same cycle checking fits overlapped implication. If a request sampled on cycle ten requires grant from cycle eleven onward, nonoverlapped implication is clearer.</p><div class="answer-notes"><div class="answer-note"><strong>Common follow up</strong>How does a delayed consequent change the timing? Combine the implication start point with the delay, then count cycles on paper.</div><div class="answer-note"><strong>Mistake candidates make</strong>Choosing an operator before deciding whether the current cycle belongs in the allowed window.</div></div><p class="interview-tip"><strong>Interview tip:</strong> answer with cycle numbers. They remove ambiguity immediately.</p></div>
+        </article>
+        <article class="interview-question">
+          <h4>How do you know an assertion did not pass vacuously?</h4>
+          <div class="answer-copy"><p>An implication can pass because its trigger never occurred. I add coverage for the antecedent and for a successful complete match, then review whether those cover properties were reached in the intended tests.</p><p>For request followed by grant, a green assertion is weak evidence if request stayed low for the whole run. I want at least one covered request and one covered legal grant response, plus a negative test that makes the assertion fail on purpose.</p><div class="answer-notes"><div class="answer-note"><strong>Common follow up</strong>Would assertion coverage alone prove the property is correct? No. I still review boundary traces and confirm the property fails on the intended violation.</div><div class="answer-note"><strong>Mistake candidates make</strong>Reporting a zero failure count without checking that the antecedent had a chance to fire.</div></div><p class="interview-tip"><strong>Interview tip:</strong> say how you would test the checker itself. That is the part many answers miss.</p></div>
+        </article>
+      </section>
+
+      <section class="question-group" id="iq-cdc" aria-labelledby="iq-cdc-title">
+        <div class="question-group-head"><span>05 / 07</span><h3 id="iq-cdc-title">Clock domain crossing</h3></div>
+        <article class="interview-question">
+          <h4>Why is a two flop synchronizer not enough for every crossing?</h4>
+          <div class="answer-copy"><p>It reduces the probability that metastability propagates when a destination samples one stable control level. It does not guarantee that a short pulse is sampled, preserve the relationship between several bits or carry an ordered stream.</p><p>A one cycle pulse from a fast source can disappear between slow destination edges. I would use pulse stretching, a toggle or a handshake depending on event rate. For payload streams, I would use a handshake or asynchronous FIFO instead of synchronizing each data bit independently.</p><div class="answer-notes"><div class="answer-note"><strong>Common follow up</strong>Why not synchronize every bus bit? Each bit can settle in a different cycle, so the destination may see a value the source never produced.</div><div class="answer-note"><strong>Mistake candidates make</strong>Treating every CDC failure as metastability and ignoring loss, duplication and incoherent data.</div></div><p class="interview-tip"><strong>Interview tip:</strong> begin by classifying the information: level, event, related control or ordered payload.</p></div>
+        </article>
+        <article class="interview-question">
+          <h4>How would you verify an asynchronous FIFO?</h4>
+          <div class="answer-copy"><p>I vary the clock ratio and phase, exercise independent resets and generate bursts that cross empty and full boundaries. The scoreboard tracks accepted writes in source order and accepted reads in destination order. I check no loss, duplication or reordering.</p><p>I also verify pointer and flag behavior around wraparound, then use CDC analysis for synchronizer structure and assertions for local protocol rules. Simulation alone cannot model analog metastability, so I do not claim that a random clock test proves physical safety.</p><div class="answer-notes"><div class="answer-note"><strong>Common follow up</strong>Why use Gray coded pointers? Only one bit should change between adjacent values, which reduces incoherent sampling risk across the domain boundary.</div><div class="answer-note"><strong>Mistake candidates make</strong>Running two different clocks and calling that CDC verification without checking information preservation.</div></div><p class="interview-tip"><strong>Interview tip:</strong> separate structural CDC checks from functional data integrity checks.</p></div>
+        </article>
+      </section>
+
+      <section class="question-group" id="iq-coverage" aria-labelledby="iq-coverage-title">
+        <div class="question-group-head"><span>06 / 07</span><h3 id="iq-coverage-title">Coverage and closure</h3></div>
+        <article class="interview-question">
+          <h4>What is the difference between code coverage and functional coverage?</h4>
+          <div class="answer-copy"><p>Code coverage reports which RTL structures executed, such as statements, branches, expressions or toggles. Functional coverage reports whether the behaviors named in the verification plan were observed. They answer different questions and neither proves correctness alone.</p><p>A FIFO test may toggle every RTL branch while never attempting a write at full. Code coverage looks healthy, but the requirement level behavior is missing. The reverse can also happen when the functional scenario is covered but dead or unintended RTL remains untouched.</p><div class="answer-notes"><div class="answer-note"><strong>Common follow up</strong>Which one do you close first? I use both together and investigate holes by risk, not by one fixed percentage order.</div><div class="answer-note"><strong>Mistake candidates make</strong>Saying functional coverage is always better. It is only as good as the model and sampling.</div></div><p class="interview-tip"><strong>Interview tip:</strong> name the question each metric answers instead of arguing that one replaces the other.</p></div>
+        </article>
+        <article class="interview-question">
+          <h4>How do you close a stubborn coverage hole?</h4>
+          <div class="answer-copy"><p>I classify it before changing stimulus. Was the scenario generated? Was it accepted by the interface? Did the monitor sample it? Is the bin legal and reachable? Did the RTL fail to enter the intended state?</p><p>If a full FIFO read and write cross is empty, I inspect the trace in that order. The fix might be a focused sequence, a monitor correction, a repaired bin, a design bug or a documented exclusion. More seeds are only useful when probability is actually the problem.</p><div class="answer-notes"><div class="answer-note"><strong>Common follow up</strong>When is a waiver reasonable? When the condition is proved unreachable or intentionally excluded and the rationale is reviewed and recorded.</div><div class="answer-note"><strong>Mistake candidates make</strong>Changing constraints immediately and accidentally disturbing scenarios that were already well covered.</div></div><p class="interview-tip"><strong>Interview tip:</strong> use the words generated, accepted, observed and sampled. That sequence gives your answer structure.</p></div>
+        </article>
+      </section>
+
+      <section class="question-group" id="iq-scenarios" aria-labelledby="iq-scenarios-title">
+        <div class="question-group-head"><span>07 / 07</span><h3 id="iq-scenarios-title">Tricky scenarios</h3></div>
+        <article class="interview-question">
+          <h4>A valid and ready interface stalls for twenty cycles. How do you decide whether it is a bug?</h4>
+          <div class="answer-copy"><p>I first read the protocol contract. If ready may stay low without a latency bound, the stall may be legal even when it is undesirable. I check that valid and payload remain stable while blocked, no transfer is counted before both are high and the eventual transfer happens exactly once.</p><p>If the specification promises progress within a bound, I add or inspect a liveness property. I also separate local backpressure from system deadlock by tracing the reason ready stayed low through downstream queues and credits.</p><div class="answer-notes"><div class="answer-note"><strong>Common follow up</strong>What would you assert? Stability while valid is high and ready is low, plus bounded progress only if the architecture promises it.</div><div class="answer-note"><strong>Mistake candidates make</strong>Calling any long stall a protocol violation without checking whether the contract includes a progress guarantee.</div></div><p class="interview-tip"><strong>Interview tip:</strong> do not invent a requirement. Say what must be clarified before you label the behavior.</p></div>
+        </article>
+        <article class="interview-question">
+          <h4>The test passes alone but fails in a regression. What do you investigate?</h4>
+          <div class="answer-copy"><p>I preserve the regression command, seed, order, tool version and configuration. Then I look for shared state, uninitialized values, timing assumptions, test order dependence and resource collisions. A passing standalone replay can mean the original environment changed the starting conditions.</p><p>I compare the earliest divergence between a passing and failing run. If the failure depends on another test, I inspect static variables, global configuration, files, reset cleanup and anything that survives longer than the test expects.</p><div class="answer-notes"><div class="answer-note"><strong>Common follow up</strong>Would you add a delay to make it pass? No. A delay can hide a race without explaining it. I want a synchronization rule or ownership fix.</div><div class="answer-note"><strong>Mistake candidates make</strong>Rerunning until green and treating the failure as noise.</div></div><p class="interview-tip"><strong>Interview tip:</strong> distinguish reproducibility from frequency. A rare failure still has a deterministic cause in the simulated system.</p></div>
+        </article>
+      </section>
+
       <div class="quiz-head"><h3>Quick flip quiz</h3><p>Choose a card, answer aloud, then reveal my version.</p></div>
       <div class="quiz-grid">
         <button class="quiz-card" type="button" aria-pressed="false" aria-label="Reveal answer about UVM monitors">
@@ -1196,6 +1567,235 @@
           <span class="quiz-inner"><span class="quiz-face front"><span>Question three</span><strong>What makes a random constraint useful?</strong><small>Tap to reveal</small></span><span class="quiz-face back"><span>My answer</span><p>It describes the legal space without quietly removing the difficult cases. I check distributions and coverage, because a solver can satisfy the code while missing the intent.</p></span></span>
         </button>
       </div>
+    </section>
+
+    <section class="section page-panel" id="uvm" data-page="uvm" aria-labelledby="uvm-title" hidden>
+      <div class="uvm-lead">
+        <h2 id="uvm-title">UVM makes sense when you follow the transaction.</h2>
+        <div><p>I do not teach UVM as a collection of macros. Start with one request. Follow who creates it, who arbitrates it, who drives it, who observes it and who checks it. Once that path is clear, the class names and phases stop feeling arbitrary.</p><p class="margin-note">My rule: when a bench is silent, prove structure, configuration and connectivity before you debug behavior.</p></div>
+      </div>
+
+      <nav class="guide-jump" aria-label="UVM guide chapters">
+        <a href="#uvm-architecture">Architecture</a><a href="#uvm-phases">Phases</a><a href="#uvm-sequences">Sequences</a><a href="#uvm-tlm">TLM</a><a href="#uvm-factory">Factory and config</a><a href="#uvm-ral">RAL</a><a href="#uvm-bringup">Bring up</a><a href="#uvm-interviews">Interview map</a>
+      </nav>
+
+      <div class="uvm-flow" aria-label="UVM transaction flow">
+        <div><b>01</b><strong>Sequence</strong><span>Creates the request</span></div>
+        <div><b>02</b><strong>Sequencer</strong><span>Arbitrates requests</span></div>
+        <div><b>03</b><strong>Driver</strong><span>Moves pins</span></div>
+        <div><b>04</b><strong>Monitor</strong><span>Observes acceptance</span></div>
+        <div><b>05</b><strong>Scoreboard</strong><span>Predicts and compares</span></div>
+      </div>
+
+      <section class="uvm-chapter" id="uvm-architecture" aria-labelledby="uvm-architecture-title">
+        <div class="uvm-chapter-head"><span>01 / 08</span><h3 id="uvm-architecture-title">Architecture, piece by piece</h3><p>Each component should have one clear job. If a class drives, observes, predicts and checks at once, reuse and debug both become harder.</p></div>
+        <div class="component-list">
+          <article class="component-item"><b>Test</b><p>Selects the scenario, configures the environment, applies overrides and starts top level sequences. The test should express intent, not contain pin level driving.</p><em>Interview check: what changes between two tests if the environment is reusable?</em></article>
+          <article class="component-item"><b>Environment</b><p>Owns reusable agents, scoreboards, coverage collectors, virtual sequencers and reference models. It connects block level pieces into one verification system.</p><em>Common confusion: the environment is structure. The test chooses how that structure is used.</em></article>
+          <article class="component-item"><b>Agent</b><p>Packages one interface. An active agent has a sequencer, driver and monitor. A passive agent keeps only the observation side.</p><em>Example: a block bench drives AXI actively but watches a status interface passively.</em></article>
+          <article class="component-item"><b>Driver</b><p>Consumes sequence items and converts them into timed interface activity. It owns the protocol handshake and must not call <code>item_done</code> before it has finished the item.</p><em>Common mistake: treating delay and reset behavior as sequence responsibilities.</em></article>
+          <article class="component-item"><b>Monitor</b><p>Samples the interface, reconstructs accepted transactions and publishes them. It should not trust the driver or drive any signal.</p><em>Example: publish a valid and ready transfer only on the clock edge where both are sampled high.</em></article>
+          <article class="component-item"><b>Sequencer</b><p>Arbitrates between sequences and provides the request and response channel to the driver. It does not create pin activity.</p><em>Common confusion: the sequencer is not the stimulus generator. Sequences generate transaction intent.</em></article>
+          <article class="component-item"><b>Sequence</b><p>Creates and randomizes items, controls their order and can coordinate scenarios across agents through a virtual sequence.</p><em>Keep protocol timing in the driver unless the transaction abstraction genuinely includes timing.</em></article>
+          <article class="component-item"><b>Scoreboard</b><p>Builds or receives an independent expectation, aligns it with observed output and reports differences with enough context to debug.</p><em>A scoreboard mismatch means disagreement. It does not automatically mean the DUT is wrong.</em></article>
+          <article class="component-item"><b>RAL model</b><p>Represents registers, fields, access policies and mirrored state. An adapter translates between register operations and bus items. A predictor updates the model from observed traffic.</p><em>Use the mirror as a model of expected state, not as proof that the hardware matches it.</em></article>
+        </div>
+      </section>
+
+      <section class="uvm-chapter" id="uvm-phases" aria-labelledby="uvm-phases-title">
+        <div class="uvm-chapter-head"><span>02 / 08</span><h3 id="uvm-phases-title">Build, connect and run</h3><p>The phase names matter less than the responsibility boundary. Build creates. Connect wires. Run consumes simulation time.</p></div>
+        <div class="phase-ledger">
+          <article><h4>Build phase</h4><p>Create child components through the factory and read configuration that decides structure or behavior.</p><ul><li>The parent builds before its children.</li><li>Use <code>type_id::create</code> for components.</li><li>Get the virtual interface and agent activity setting here.</li><li>Do not start timed stimulus here.</li></ul></article>
+          <article><h4>Connect phase</h4><p>Join endpoints after the hierarchy exists. This is where structural communication becomes explicit.</p><ul><li>Connect driver and sequencer.</li><li>Connect monitor analysis ports to subscribers.</li><li>Connect register predictor and adapter paths.</li><li>Print topology if an endpoint receives nothing.</li></ul></article>
+          <article><h4>Run phase</h4><p>Clocks move, sequences run, drivers wait for items and monitors collect activity. Objections control when the test may finish.</p><ul><li>Raise an objection before starting the scenario.</li><li>Drop it after expected drain and checking finish.</li><li>A blocked forever task does not keep simulation alive by itself.</li><li>Keep objection ownership small and obvious.</li></ul></article>
+        </div>
+        <div class="uvm-split" style="margin-top:28px">
+          <div class="reference-copy"><h4>What actually happens</h4><p>UVM walks the component tree through build. By connect, all expected children should exist, so ports can point to real exports or implementations. Run phase tasks then execute concurrently. If a scoreboard is missing, run phase cannot repair the hierarchy. If a monitor exists but has the wrong virtual interface, stimulus can run while observation remains silent.</p><p class="key-takeaway"><strong>Practical tip:</strong> call <code>uvm_top.print_topology()</code> before the first complicated test. Save the known good topology and compare it when configuration changes.</p></div>
+          <div class="code-block"><button class="copy-btn" type="button">Copy</button><pre><code>function void build_phase(uvm_phase phase);
+  super.build_phase(phase);
+  sqr = bus_sequencer::type_id::create("sqr", this);
+  drv = bus_driver::type_id::create("drv", this);
+  mon = bus_monitor::type_id::create("mon", this);
+endfunction
+
+function void connect_phase(uvm_phase phase);
+  super.connect_phase(phase);
+  drv.seq_item_port.connect(sqr.seq_item_export);
+  mon.ap.connect(env.scoreboard.actual_imp);
+endfunction</code></pre></div>
+        </div>
+      </section>
+
+      <section class="uvm-chapter" id="uvm-sequences" aria-labelledby="uvm-sequences-title">
+        <div class="uvm-chapter-head"><span>03 / 08</span><h3 id="uvm-sequences-title">Sequence and sequencer communication</h3><p>The handshake protects item ownership. Learn the request path before using convenience macros.</p></div>
+        <div class="uvm-split">
+          <div class="reference-copy"><h4>The sequence side</h4><p><code>start_item(req)</code> waits until the sequencer grants this sequence permission to send. Randomize or fill the request after that grant if arbitration timing matters. <code>finish_item(req)</code> sends the prepared request and waits until the driver completes it.</p><h4>The driver side</h4><p><code>get_next_item(req)</code> obtains the request. The driver performs the complete protocol operation, then calls <code>item_done()</code>. If a response matters, the driver creates a separate response, preserves the transaction identity and returns it through <code>item_done(rsp)</code> or <code>put_response</code>.</p><p class="key-takeaway"><strong>Common bug:</strong> forgetting <code>item_done</code> leaves the sequence waiting forever. Calling it too early lets the next item arrive before the driver is ready.</p></div>
+          <div class="code-block"><button class="copy-btn" type="button">Copy</button><pre><code>// Sequence
+req = bus_item::type_id::create("req");
+start_item(req);
+if (!req.randomize() with { write == 1; })
+  `uvm_fatal("RAND", "Request randomization failed")
+finish_item(req);
+
+// Driver
+seq_item_port.get_next_item(req);
+drive_request(req);
+wait_for_accept();
+seq_item_port.item_done();</code></pre></div>
+        </div>
+        <div class="confusion-list" style="margin-top:28px">
+          <div class="confusion"><strong>Sequence versus sequence item</strong><p>The item is transaction data. The sequence is procedural control that creates and orders items.</p></div>
+          <div class="confusion"><strong>Sequencer versus driver</strong><p>The sequencer arbitrates requests. The driver knows the interface timing and moves the pins.</p></div>
+          <div class="confusion"><strong>Virtual sequence versus virtual sequencer</strong><p>A virtual sequence coordinates child sequencers. A virtual sequencer is an optional holder of those handles. Many benches can coordinate directly through handles in the virtual sequence.</p></div>
+        </div>
+      </section>
+
+      <section class="uvm-chapter" id="uvm-tlm" aria-labelledby="uvm-tlm-title">
+        <div class="uvm-chapter-head"><span>04 / 08</span><h3 id="uvm-tlm-title">TLM ports without the fog</h3><p>Transaction level modeling lets components communicate with objects instead of reaching into one another.</p></div>
+        <div class="component-list">
+          <article class="component-item"><b>Port</b><p>A component calls an interface method through a port. The driver sequence item port is the familiar request side example.</p><em>Think: I need a service.</em></article>
+          <article class="component-item"><b>Export</b><p>An export forwards an interface implementation through hierarchy. The sequencer exposes its sequence item export to the driver.</p><em>Think: I expose a service implemented below or elsewhere.</em></article>
+          <article class="component-item"><b>Implementation</b><p>An implementation provides the method body. A scoreboard analysis implementation receives transactions through its <code>write</code> method.</p><em>Think: this class performs the service.</em></article>
+          <article class="component-item"><b>Analysis port</b><p>A publisher calls <code>write</code> once and every connected subscriber receives the transaction. Monitors use this broadcast pattern.</p><em>Important: subscribers should clone if they retain or modify the object.</em></article>
+          <article class="component-item"><b>FIFO</b><p>A TLM analysis FIFO buffers published transactions and gives the consumer a blocking or nonblocking retrieval interface.</p><em>Useful when producers and consumers run at different rates.</em></article>
+          <article class="component-item"><b>Connection debug</b><p>If nothing arrives, verify the producer calls <code>write</code>, inspect connection count, confirm the correct instance path and print the transaction before and after publication.</p><em>Do not start by rewriting the scoreboard.</em></article>
+        </div>
+      </section>
+
+      <section class="uvm-chapter" id="uvm-factory" aria-labelledby="uvm-factory-title">
+        <div class="uvm-chapter-head"><span>05 / 08</span><h3 id="uvm-factory-title">Factory and configuration</h3><p>Both mechanisms support reuse, but they solve different problems. The factory changes type. Configuration changes a value or passes a handle.</p></div>
+        <div class="uvm-split">
+          <div class="reference-copy"><h4>Factory</h4><p>Register reusable classes, create them through <code>type_id::create</code> and apply an override before the target instance is built. A type override replaces every matching requested type in scope. An instance override targets a hierarchy path.</p><h4>Configuration database</h4><p>Set a value from a known owner and get it in the component that needs it. Virtual interfaces, active or passive mode and small policy objects are reasonable uses. Narrow paths make intent visible. Wildcards make demos quick but large benches hard to reason about.</p><p class="key-takeaway"><strong>Debug order:</strong> print the topology, print factory overrides, check the exact instance path and fail immediately when a required <code>get</code> returns false.</p></div>
+          <div class="code-block"><button class="copy-btn" type="button">Copy</button><pre><code>// Top level before run_test
+uvm_config_db#(virtual bus_if)::set(
+  null, "uvm_test_top.env.agent*", "vif", bus_vif
+);
+
+// Driver build phase
+if (!uvm_config_db#(virtual bus_if)::get(
+      this, "", "vif", vif))
+  `uvm_fatal("NOVIF", "bus_if was not configured")
+
+// Test build phase
+base_driver::type_id::set_inst_override(
+  error_driver::get_type(), "env.agent.drv", this
+);</code></pre></div>
+        </div>
+      </section>
+
+      <section class="uvm-chapter" id="uvm-ral" aria-labelledby="uvm-ral-title">
+        <div class="uvm-chapter-head"><span>06 / 08</span><h3 id="uvm-ral-title">Register abstraction layer</h3><p>RAL gives register intent one model, but it still needs a real bus path and a reliable observation path.</p></div>
+        <div class="component-list">
+          <article class="component-item"><b>Register model</b><p>Describes blocks, registers, fields, addresses, reset values and access policies. Build and lock it before use.</p><em>Interview question: what is modeled that a raw bus transaction does not know?</em></article>
+          <article class="component-item"><b>Adapter</b><p>Converts a generic register operation into the bus sequence item and converts a bus response back.</p><em>A wrong byte enable or response mapping can make good RTL look broken.</em></article>
+          <article class="component-item"><b>Map and sequencer</b><p>The map holds address and access information. Connecting it to the bus sequencer and adapter enables front door operations.</p><em>Front door uses the interface. Back door accesses the modeled HDL path directly.</em></article>
+          <article class="component-item"><b>Predictor</b><p>Consumes monitored bus transactions and updates mirrored values. Explicit prediction is useful when traffic comes from more than RAL itself.</p><em>Predict from observation, not merely from the requested write.</em></article>
+          <article class="component-item"><b>Desired and mirrored values</b><p>The desired value is what the model wants. The mirrored value is what the model believes is currently in the DUT.</p><em>Neither replaces an actual read when hardware side effects may change state.</em></article>
+          <article class="component-item"><b>Common register bugs</b><p>Check reset values, read only and write one to clear behavior, volatile fields, aliasing, access size and side effects.</p><em>Do not stop after a simple write then read test.</em></article>
+        </div>
+      </section>
+
+      <section class="uvm-chapter" id="uvm-bringup" aria-labelledby="uvm-bringup-title">
+        <div class="uvm-chapter-head"><span>07 / 08</span><h3 id="uvm-bringup-title">A bring up order that saves time</h3><p>I bring up one path at a time. A complicated random test is the last thing I add, not the first.</p></div>
+        <div class="phase-ledger">
+          <article><h4>Prove structure</h4><p>Print topology. Confirm every expected component, activity setting and virtual interface. Check factory overrides before simulation behavior gets involved.</p><ul><li>One active agent</li><li>One driver and sequencer connection</li><li>One monitor publication path</li></ul></article>
+          <article><h4>Prove one transfer</h4><p>Use one directed item. Log when it is created, granted, driven, accepted, observed and compared. The same transaction should tell one consistent story.</p><ul><li>No random timing yet</li><li>No parallel sequences yet</li><li>No hidden retry behavior</li></ul></article>
+          <article><h4>Add pressure carefully</h4><p>Add reset, backpressure, overlap and randomization one dimension at a time. Preserve the first failing seed and remove noise around the earliest divergence.</p><ul><li>Check drain before dropping objections</li><li>Make errors carry transaction context</li><li>Fail required configuration early</li></ul></article>
+        </div>
+        <div class="confusion-list" style="margin-top:30px">
+          <div class="confusion"><strong>“The sequence drives the interface.”</strong><p>Correction: the sequence describes transaction intent. The driver owns pin level timing.</p></div>
+          <div class="confusion"><strong>“The monitor can reuse the driver item.”</strong><p>Correction: the monitor reconstructs an independent item from sampled interface activity.</p></div>
+          <div class="confusion"><strong>“An objection starts or stops clocks.”</strong><p>Correction: an objection only tells the phase scheduler that useful work is still in progress.</p></div>
+          <div class="confusion"><strong>“More hierarchy means more reuse.”</strong><p>Correction: reuse comes from clear responsibilities and stable transaction boundaries, not from adding layers.</p></div>
+          <div class="confusion"><strong>“A scoreboard must compare immediately.”</strong><p>Correction: the scoreboard must align expected and actual transactions according to protocol ordering and latency.</p></div>
+        </div>
+      </section>
+
+      <section class="uvm-chapter" id="uvm-interviews" aria-labelledby="uvm-interviews-title">
+        <div class="uvm-chapter-head"><span>08 / 08</span><h3 id="uvm-interviews-title">How UVM maps to interview questions</h3><p>Do not stop at definitions. For each topic, explain one failure it prevents and one way you would debug it.</p></div>
+        <div class="interview-map">
+          <div><b>Architecture</b><p>Draw test, environment, agent and scoreboard. Then trace one transaction through the request and observation paths.</p></div>
+          <div><b>Phases</b><p>Explain why creation belongs in build, wiring belongs in connect and timed activity belongs in run.</p></div>
+          <div><b>Sequence handshake</b><p>Describe <code>start_item</code>, <code>finish_item</code>, <code>get_next_item</code> and <code>item_done</code>, including the deadlock when completion is forgotten.</p></div>
+          <div><b>TLM</b><p>Compare a point to point request path with an analysis broadcast. Say who calls the method and who implements it.</p></div>
+          <div><b>Factory</b><p>Give a real override example and explain why direct construction prevents it.</p></div>
+          <div><b>Configuration</b><p>Show how a virtual interface reaches an agent and how you debug a failed path match.</p></div>
+          <div><b>RAL</b><p>Explain model, map, adapter, predictor and mirrored value through one front door register write.</p></div>
+          <div><b>Bring up</b><p>State the order: topology, configuration, connectivity, one directed transfer, checking, then random pressure.</p></div>
+        </div>
+        <p class="key-takeaway"><strong>My interview rule:</strong> if you can follow one transaction and explain the first place it can go wrong, you understand more UVM than someone who memorized every callback.</p>
+      </section>
+    </section>
+
+    <section class="section page-panel" id="open-specs" data-page="open-specs" aria-labelledby="open-specs-title" hidden>
+      <div class="spec-intro">
+        <h2 id="open-specs-title">Open specs for real verification practice.</h2>
+        <div><p>This library started with a question from a professor after my guest lecture: where do students get specifications they can actually practise on? That question stayed with me. We tell people to build testbenches, but we rarely give them a clear design contract to work from.</p><p>I wrote these five starter specifications so you can treat the document as the only source of truth, make your assumptions visible and build the evidence yourself.</p></div>
+      </div>
+
+      <div class="spec-how" aria-label="How to use the Open Spec Library">
+        <div><b>01</b><strong>Pick one spec</strong><p>Start with a block whose state you can still predict by hand.</p></div>
+        <div><b>02</b><strong>Write the bench</strong><p>Create stimulus, monitors and an independent reference model in SystemVerilog.</p></div>
+        <div><b>03</b><strong>Add assertions</strong><p>Turn timing and invariant statements into properties you can fail on purpose.</p></div>
+        <div><b>04</b><strong>Check the objectives</strong><p>Use the full GitHub spec to review what your testbench proves and what it still misses.</p></div>
+      </div>
+
+      <article class="spec-entry" id="spec-001">
+        <header class="spec-entry-head"><div><span class="spec-code">SPEC 001</span><span class="difficulty">Beginner</span></div><h3>Synchronous FIFO</h3><p class="spec-overview">A single clock FIFO between producer and consumer logic. It smooths bursts while preserving order, and it gives you excellent boundary cases at empty and full.</p></header>
+        <div class="spec-detail-grid">
+          <div><h4 class="spec-block-title">Features</h4><ul class="spec-features"><li>Configurable width and power of two depth</li><li>Pipelined read with data one cycle after <code>rd_en</code></li><li>Programmable almost full and almost empty thresholds</li><li>Write ignored at full and read ignored at empty</li></ul></div>
+          <div><h4 class="spec-block-title">Parameters</h4><table class="spec-table"><thead><tr><th>Name</th><th>Default</th><th>Meaning</th></tr></thead><tbody><tr><td><code>WIDTH</code></td><td>32</td><td>Data width in bits</td></tr><tr><td><code>DEPTH</code></td><td>16</td><td>Entry count, power of two</td></tr><tr><td><code>AF_THRESH</code></td><td>14</td><td>Almost full threshold</td></tr><tr><td><code>AE_THRESH</code></td><td>1</td><td>Almost empty threshold</td></tr></tbody></table></div>
+        </div>
+        <div style="margin-top:28px"><h4 class="spec-block-title">Interface</h4><table class="spec-table"><thead><tr><th>Signal</th><th>Direction</th><th>Purpose</th></tr></thead><tbody><tr><td><code>clk</code></td><td>Input</td><td>Single rising edge clock</td></tr><tr><td><code>rst_n</code></td><td>Input</td><td>Synchronous active low reset</td></tr><tr><td><code>wr_en</code></td><td>Input</td><td>Write request</td></tr><tr><td><code>wr_data</code></td><td>Input</td><td>Write payload, WIDTH bits</td></tr><tr><td><code>rd_en</code></td><td>Input</td><td>Read request</td></tr><tr><td><code>rd_data</code></td><td>Output</td><td>Read payload, valid one cycle later</td></tr><tr><td><code>full</code>, <code>empty</code></td><td>Output</td><td>Boundary status</td></tr><tr><td><code>almost_full</code>, <code>almost_empty</code></td><td>Output</td><td>Threshold status</td></tr><tr><td><code>data_count</code></td><td>Output</td><td>Stored entry count</td></tr></tbody></table></div>
+        <div class="spec-practice"><strong>What you will practise</strong><p>Counters, status flags, full and empty corner cases, simultaneous read and write behavior, ordered scoreboards and exact one cycle read latency.</p></div>
+        <a class="button secondary" href="https://github.com/AbinayaS-19/open-spec-library" target="_blank" rel="noopener noreferrer">Read the full FIFO spec on GitHub</a>
+      </article>
+
+      <article class="spec-entry" id="spec-002">
+        <header class="spec-entry-head"><div><span class="spec-code">SPEC 002</span><span class="difficulty">Beginner</span></div><h3>Round robin arbiter</h3><p class="spec-overview">A fair arbiter for NUM_REQ requesters sharing one resource. Priority rotates in a circle, a held request keeps its grant and no requester should starve.</p></header>
+        <div class="spec-detail-grid">
+          <div><h4 class="spec-block-title">Features</h4><ul class="spec-features"><li>One hot grant output</li><li>Fair circular rotation</li><li>Grant holds while its request remains high</li><li>Idle state parks on the last rotation point with no default winner</li></ul></div>
+          <div><h4 class="spec-block-title">Parameters</h4><table class="spec-table"><thead><tr><th>Name</th><th>Default</th><th>Meaning</th></tr></thead><tbody><tr><td><code>NUM_REQ</code></td><td>4</td><td>Number of requesters, two or more</td></tr></tbody></table></div>
+        </div>
+        <div style="margin-top:28px"><h4 class="spec-block-title">Interface</h4><table class="spec-table"><thead><tr><th>Signal</th><th>Direction</th><th>Purpose</th></tr></thead><tbody><tr><td><code>clk</code></td><td>Input</td><td>Single rising edge clock</td></tr><tr><td><code>rst_n</code></td><td>Input</td><td>Synchronous active low reset</td></tr><tr><td><code>req</code></td><td>Input</td><td>NUM_REQ bit level sensitive request vector</td></tr><tr><td><code>gnt</code></td><td>Output</td><td>NUM_REQ bit one hot grant vector, all zero when idle</td></tr></tbody></table></div>
+        <div class="spec-practice"><strong>What you will practise</strong><p>Arbitration, fairness bounds, one hot checks, grant hold behavior, rotation pointers and the difference between fixed priority and parked round robin priority.</p></div>
+        <a class="button secondary" href="https://github.com/AbinayaS-19/open-spec-library" target="_blank" rel="noopener noreferrer">Read the full arbiter spec on GitHub</a>
+      </article>
+
+      <article class="spec-entry" id="spec-003">
+        <header class="spec-entry-head"><div><span class="spec-code">SPEC 003</span><span class="difficulty">Intermediate</span></div><h3>UART</h3><p class="spec-overview">A single clock serial transmitter and receiver with eight data bits sent least significant bit first, one start bit, one stop bit and optional run time parity.</p></header>
+        <div class="spec-detail-grid">
+          <div><h4 class="spec-block-title">Features</h4><ul class="spec-features"><li>Optional even or odd parity selected at run time</li><li>Sixteen times oversampling with mid bit receive sampling</li><li>Run time programmable baud divisor</li><li>Frame and parity error reporting</li></ul></div>
+          <div><h4 class="spec-block-title">Parameters</h4><table class="spec-table"><thead><tr><th>Name</th><th>Default</th><th>Meaning</th></tr></thead><tbody><tr><td><code>CLK_FREQ</code></td><td>50,000,000</td><td>System clock frequency in hertz</td></tr><tr><td><code>BAUD</code></td><td>115,200</td><td>Target serial bit rate</td></tr></tbody></table></div>
+        </div>
+        <div style="margin-top:28px"><h4 class="spec-block-title">Interface</h4><table class="spec-table"><thead><tr><th>Signal</th><th>Direction</th><th>Purpose</th></tr></thead><tbody><tr><td><code>clk</code>, <code>rst_n</code></td><td>Input</td><td>Clock and synchronous active low reset</td></tr><tr><td><code>cfg_divisor</code></td><td>Input</td><td>Sixteen bit baud divisor</td></tr><tr><td><code>cfg_parity_en</code>, <code>cfg_parity_odd</code></td><td>Input</td><td>Run time parity controls</td></tr><tr><td><code>tx_start</code>, <code>tx_data</code></td><td>Input</td><td>Transmit request and byte</td></tr><tr><td><code>tx_serial</code>, <code>tx_busy</code></td><td>Output</td><td>Serial line and busy state</td></tr><tr><td><code>rx_serial</code></td><td>Input</td><td>Incoming serial line</td></tr><tr><td><code>rx_data</code>, <code>rx_done</code></td><td>Output</td><td>Received byte and completion pulse</td></tr><tr><td><code>rx_frame_error</code>, <code>rx_parity_error</code></td><td>Output</td><td>Last frame error status</td></tr></tbody></table></div>
+        <div class="spec-practice"><strong>What you will practise</strong><p>Serial timing, oversampling, baud rate math, mid bit sampling, start glitch rejection, bit ordering and deliberate frame and parity error injection.</p></div>
+        <a class="button secondary" href="https://github.com/AbinayaS-19/open-spec-library" target="_blank" rel="noopener noreferrer">Read the full UART spec on GitHub</a>
+      </article>
+
+      <article class="spec-entry" id="spec-004">
+        <header class="spec-entry-head"><div><span class="spec-code">SPEC 004</span><span class="difficulty">Intermediate</span></div><h3>AXI4 Lite slave</h3><p class="spec-overview">A small register file behind the full five channel VALID and READY handshake. Read and write channels are independent, and every legal or illegal access has a checkable result.</p></header>
+        <div class="spec-detail-grid">
+          <div><h4 class="spec-block-title">Features</h4><ul class="spec-features"><li>32 bit data and 12 bit address for a 4 KB space</li><li>Eight read write registers and one read only ID register</li><li>Byte strobes on writes</li><li>SLVERR response for illegal or unaligned accesses</li></ul></div>
+          <div><h4 class="spec-block-title">Parameters</h4><table class="spec-table"><thead><tr><th>Name</th><th>Default</th><th>Meaning</th></tr></thead><tbody><tr><td><code>ADDR_WIDTH</code></td><td>12</td><td>Address width in bits</td></tr><tr><td><code>DATA_WIDTH</code></td><td>32</td><td>Data width in bits</td></tr></tbody></table></div>
+        </div>
+        <div style="margin-top:28px"><h4 class="spec-block-title">Interface</h4><table class="spec-table"><thead><tr><th>Channel</th><th>Signals</th><th>Purpose</th></tr></thead><tbody><tr><td>Clock and reset</td><td><code>clk</code>, <code>rst_n</code></td><td>Synchronous interface control</td></tr><tr><td>Write address</td><td><code>awaddr</code>, <code>awvalid</code>, <code>awready</code></td><td>Independent address handshake</td></tr><tr><td>Write data</td><td><code>wdata</code>, <code>wstrb</code>, <code>wvalid</code>, <code>wready</code></td><td>Data, byte strobes and handshake</td></tr><tr><td>Write response</td><td><code>bresp</code>, <code>bvalid</code>, <code>bready</code></td><td>OKAY or SLVERR completion</td></tr><tr><td>Read address</td><td><code>araddr</code>, <code>arvalid</code>, <code>arready</code></td><td>Read request handshake</td></tr><tr><td>Read data</td><td><code>rdata</code>, <code>rresp</code>, <code>rvalid</code>, <code>rready</code></td><td>Data, response and completion handshake</td></tr></tbody></table></div>
+        <div class="spec-practice"><strong>What you will practise</strong><p>Protocol handshakes, address and data arriving in either order, byte strobes, stable responses under backpressure, error handling and independent read and write channels.</p></div>
+        <a class="button secondary" href="https://github.com/AbinayaS-19/open-spec-library" target="_blank" rel="noopener noreferrer">Read the full AXI4 Lite spec on GitHub</a>
+      </article>
+
+      <article class="spec-entry" id="spec-005">
+        <header class="spec-entry-head"><div><span class="spec-code">SPEC 005</span><span class="difficulty">Beginner</span></div><h3>Countdown timer</h3><p class="spec-overview">A 32 bit down counter with a prescaler, one shot and periodic modes, a one cycle interrupt pulse and pause then resume behavior.</p></header>
+        <div class="spec-detail-grid">
+          <div><h4 class="spec-block-title">Features</h4><ul class="spec-features"><li>Clock division from one to 256 cycles</li><li>One shot mode counts once and stops</li><li>Periodic mode reloads and repeats</li><li>Pause holds the count and resume continues from it</li></ul></div>
+          <div><h4 class="spec-block-title">Parameters</h4><table class="spec-table"><thead><tr><th>Name</th><th>Default</th><th>Meaning</th></tr></thead><tbody><tr><td><code>WIDTH</code></td><td>32</td><td>Counter width in bits</td></tr></tbody></table></div>
+        </div>
+        <div style="margin-top:28px"><h4 class="spec-block-title">Interface</h4><table class="spec-table"><thead><tr><th>Signal</th><th>Direction</th><th>Purpose</th></tr></thead><tbody><tr><td><code>clk</code>, <code>rst_n</code></td><td>Input</td><td>Clock and synchronous active low reset</td></tr><tr><td><code>load_en</code>, <code>load_value</code></td><td>Input</td><td>Load pulse and 32 bit value</td></tr><tr><td><code>enable</code></td><td>Input</td><td>Run when high, pause when low</td></tr><tr><td><code>mode</code></td><td>Input</td><td>Zero for one shot, one for periodic</td></tr><tr><td><code>prescale</code></td><td>Input</td><td>Eight bit clock divider value</td></tr><tr><td><code>irq</code></td><td>Output</td><td>One cycle pulse at the zero event</td></tr><tr><td><code>count</code></td><td>Output</td><td>Current 32 bit counter value</td></tr></tbody></table></div>
+        <div class="spec-practice"><strong>What you will practise</strong><p>Prescaler timing, one shot versus periodic state, exact interrupt pulse width, load precedence, pause and resume, and boundary behavior when zero is loaded.</p></div>
+        <a class="button secondary" href="https://github.com/AbinayaS-19/open-spec-library" target="_blank" rel="noopener noreferrer">Read the full timer spec on GitHub</a>
+      </article>
+
+      <div class="spec-license"><p>The library is licensed under CC BY 4.0, so you can use and adapt the specifications with attribution. Contributions are welcome, especially clearer requirements, useful corner cases and verification objectives that make a project better to learn from.</p><a class="button primary" href="https://github.com/AbinayaS-19/open-spec-library" target="_blank" rel="noopener noreferrer">Open the library on GitHub</a></div>
     </section>
 
     <section class="section page-panel" id="ai-verification" data-page="ai-verification" aria-labelledby="ai-title" hidden>
@@ -1414,7 +2014,37 @@ a_req_gets_grant:
         </div>
       </div>
     </section>
+
+    <section class="newsletter-inline" id="newsletter-inline" aria-labelledby="newsletter-inline-title" hidden>
+      <div class="newsletter-copy"><h2 id="newsletter-inline-title">Want the next guide in your inbox?</h2><p>Like this? I send one short email a week with new guides, interview questions and specs to practise on. <span class="newsletter-free">Everything on SiliconDV stays free to read with or without signing up.</span> The email simply makes sure you do not miss what is new.</p></div>
+      <div>
+        <form class="newsletter-form" id="newsletter-inline-form" action="https://formsubmit.co/abiamra98@gmail.com" method="POST" target="newsletter-inline-response">
+          <input type="hidden" name="_subject" value="New SiliconDV newsletter signup" /><input type="hidden" name="_template" value="table" /><input type="hidden" name="_captcha" value="false" />
+          <label for="newsletter-inline-email" class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">Email address</label>
+          <input id="newsletter-inline-email" name="email" type="email" autocomplete="email" placeholder="you@example.com" required />
+          <button class="button primary" type="submit">Subscribe</button>
+          <p class="newsletter-form-note">Free forever. Unsubscribe anytime.</p>
+        </form>
+        <div class="newsletter-confirmation" id="newsletter-inline-confirmation" role="status" tabindex="-1" hidden>You are in! First email lands this week.</div>
+        <iframe name="newsletter-inline-response" id="newsletter-inline-response" title="Newsletter signup response" hidden></iframe>
+      </div>
+    </section>
   </main>
+
+  <aside class="newsletter-slide" id="newsletter-slide" aria-labelledby="newsletter-slide-title" hidden>
+    <button class="newsletter-slide-close" id="newsletter-slide-close" type="button" aria-label="Dismiss newsletter signup">×</button>
+    <h2 id="newsletter-slide-title">Like this guide?</h2>
+    <p>I send one short email a week with new guides, interview questions and specs to practise on. Everything here stays free. The email just helps you catch the new stuff.</p>
+    <form class="newsletter-form" id="newsletter-slide-form" action="https://formsubmit.co/abiamra98@gmail.com" method="POST" target="newsletter-slide-response">
+      <input type="hidden" name="_subject" value="New SiliconDV newsletter signup" /><input type="hidden" name="_template" value="table" /><input type="hidden" name="_captcha" value="false" />
+      <label for="newsletter-slide-email" class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">Email address</label>
+      <input id="newsletter-slide-email" name="email" type="email" autocomplete="email" placeholder="you@example.com" required />
+      <button class="button primary" type="submit">Subscribe</button>
+      <p class="newsletter-form-note">Free forever. Unsubscribe anytime.</p>
+    </form>
+    <div class="newsletter-confirmation" id="newsletter-slide-confirmation" role="status" tabindex="-1" hidden>You are in! First email lands this week.</div>
+    <iframe name="newsletter-slide-response" id="newsletter-slide-response" title="Newsletter signup response" hidden></iframe>
+  </aside>
 
   <footer>
     <span>Clear, practical design verification notes for working engineers.</span>
@@ -1428,10 +2058,18 @@ a_req_gets_grant:
       var pageTrail = document.getElementById('page-trail');
       var trailCurrent = document.getElementById('trail-current');
       var navLinks = Array.prototype.slice.call(document.querySelectorAll('[data-nav-page]'));
+      var newsletterTop = document.getElementById('newsletter-top');
+      var newsletterInline = document.getElementById('newsletter-inline');
+      var newsletterSlide = document.getElementById('newsletter-slide');
+      var newsletterDismissed = false;
+      var newsletterSlideShown = false;
+      var activePage = 'home';
       var pageNames = {
         home: 'All topics',
         start: 'Start Here · Beginner Roadmap',
         interview: 'Interview Preparation',
+        uvm: 'UVM Learning Guide',
+        'open-specs': 'Open Spec Library',
         'ai-verification': 'AI in Verification',
         library: 'Library',
         reference: 'Quick Reference',
@@ -1442,7 +2080,10 @@ a_req_gets_grant:
       var anchorPages = {
         paths: 'start', beginner: 'start',
         'article-interview': 'reference', 'article-spec': 'reference', 'article-sv': 'reference',
-        'article-uvm': 'reference', 'article-sva': 'reference', 'article-coverage': 'reference', 'article-cdc': 'reference'
+        'article-uvm': 'reference', 'article-sva': 'reference', 'article-coverage': 'reference', 'article-cdc': 'reference',
+        'iq-fundamentals': 'interview', 'iq-sv': 'interview', 'iq-uvm': 'interview', 'iq-sva': 'interview', 'iq-cdc': 'interview', 'iq-coverage': 'interview', 'iq-scenarios': 'interview',
+        'uvm-architecture': 'uvm', 'uvm-phases': 'uvm', 'uvm-sequences': 'uvm', 'uvm-tlm': 'uvm', 'uvm-factory': 'uvm', 'uvm-ral': 'uvm', 'uvm-bringup': 'uvm', 'uvm-interviews': 'uvm',
+        'spec-001': 'open-specs', 'spec-002': 'open-specs', 'spec-003': 'open-specs', 'spec-004': 'open-specs', 'spec-005': 'open-specs'
       };
 
       function resolvePage(hash) {
@@ -1456,10 +2097,17 @@ a_req_gets_grant:
         options = options || {};
         var targetId = (window.location.hash || '#home').slice(1) || 'home';
         var page = resolvePage(window.location.hash);
+        activePage = page;
         panels.forEach(function (panel) {
           panel.hidden = panel.dataset.page !== page;
         });
         pageTrail.hidden = page === 'home';
+        newsletterTop.hidden = page === 'home' || newsletterDismissed;
+        newsletterInline.hidden = page === 'home';
+        if (page === 'home' || newsletterDismissed) {
+          newsletterSlide.classList.remove('show');
+          newsletterSlide.hidden = true;
+        }
         if (page !== 'home') trailCurrent.textContent = pageNames[page];
         navLinks.forEach(function (link) {
           var current = link.dataset.navPage === page || (link.dataset.navPage === 'home' && page === 'home');
@@ -1606,6 +2254,47 @@ a_req_gets_grant:
         contactThanks.hidden = false;
         contactThanks.focus();
       });
+
+      function wireNewsletter(formId, responseId, confirmationId) {
+        var form = document.getElementById(formId);
+        var response = document.getElementById(responseId);
+        var confirmation = document.getElementById(confirmationId);
+        var submitted = false;
+        form.addEventListener('submit', function () {
+          submitted = true;
+          var button = form.querySelector('button[type="submit"]');
+          button.disabled = true;
+          button.textContent = 'Joining…';
+        });
+        response.addEventListener('load', function () {
+          if (!submitted) return;
+          form.hidden = true;
+          confirmation.hidden = false;
+          confirmation.focus();
+        });
+      }
+      wireNewsletter('newsletter-top-form', 'newsletter-top-response', 'newsletter-top-confirmation');
+      wireNewsletter('newsletter-inline-form', 'newsletter-inline-response', 'newsletter-inline-confirmation');
+      wireNewsletter('newsletter-slide-form', 'newsletter-slide-response', 'newsletter-slide-confirmation');
+
+      function dismissNewsletter() {
+        newsletterDismissed = true;
+        newsletterTop.hidden = true;
+        newsletterSlide.classList.remove('show');
+        window.setTimeout(function () { newsletterSlide.hidden = true; }, 200);
+      }
+      document.getElementById('newsletter-top-close').addEventListener('click', dismissNewsletter);
+      document.getElementById('newsletter-slide-close').addEventListener('click', dismissNewsletter);
+
+      function maybeShowNewsletterSlide() {
+        if (activePage === 'home' || newsletterDismissed || newsletterSlideShown) return;
+        var available = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+        if (window.scrollY / available < .48) return;
+        newsletterSlideShown = true;
+        newsletterSlide.hidden = false;
+        window.requestAnimationFrame(function () { newsletterSlide.classList.add('show'); });
+      }
+      window.addEventListener('scroll', maybeShowNewsletterSlide, { passive: true });
 
       var doodle = document.getElementById('doodle-testbench');
       var doodleStatus = document.getElementById('doodle-status');
