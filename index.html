@@ -899,6 +899,10 @@
     .spec-table th:nth-child(2), .spec-table td:nth-child(2) { width: 24%; }
     .spec-table td { color: var(--muted); }
     .spec-table code { color: var(--ink); }
+    .spec-cite { margin: 0 0 42px; padding: 20px 22px; background: var(--accent-soft); border-top: 1px solid var(--marigold); }
+    .spec-cite strong { display: block; color: var(--accent-strong); font: 500 1.08rem var(--serif); }
+    .spec-cite p { margin: 7px 0 0; color: var(--muted); }
+    .spec-cite img { display: block; margin-top: 12px; }
     .spec-practice { margin-top: 28px; padding: 20px 22px; background: var(--accent-soft); border-top: 1px solid var(--marigold); }
     .spec-practice strong { color: var(--accent-strong); font: 500 1.08rem var(--serif); }
     .spec-practice p { margin: 7px 0 0; color: var(--muted); }
@@ -1136,6 +1140,14 @@
     <p>Get one short email a week with new guides and interview questions. <strong>Free forever, and everything here stays open.</strong></p>
     <div>
       <form class="newsletter-form" id="newsletter-top-form" action="https://formsubmit.co/abiamra98@gmail.com" method="POST" target="newsletter-top-response">
+        <input type="hidden" name="_autoresponse" value="Welcome to the SiliconDV weekly note.
+
+You will get one email a week: practical chip verification, what works in production and what fails, plus the occasional tool or guide I build for the community. No spam, ever. Unsubscribe anytime with one click.
+
+New here? Start with the guides: https://silicondv.com
+
+Glad you are here.
+Abinaya Senthil" />
         <input type="hidden" name="_subject" value="New SiliconDV newsletter signup" /><input type="hidden" name="_template" value="table" /><input type="hidden" name="_captcha" value="false" />
         <label for="newsletter-top-email" class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">Email address</label>
         <input id="newsletter-top-email" name="email" type="email" autocomplete="email" placeholder="you@example.com" required />
@@ -1733,6 +1745,12 @@ base_driver::type_id::set_inst_override(
         <div><p>This library started with a question from a professor after my guest lecture: where do students get specifications they can actually practise on? That question stayed with me. We tell people to build testbenches, but we rarely give them a clear design contract to work from.</p><p>I wrote these five starter specifications so you can treat the document as the only source of truth, make your assumptions visible and build the evidence yourself.</p></div>
       </div>
 
+      <div class="spec-cite" aria-label="How to cite the Open Spec Library">
+        <strong>Cite this library</strong>
+        <p>Senthil, A. (2026). Open Spec Library: Verification Specifications for Common Design Blocks (Version 1.0.0). Zenodo. <a href="https://doi.org/10.5281/zenodo.23328817" target="_blank" rel="noopener noreferrer">https://doi.org/10.5281/zenodo.23328817</a></p>
+        <a href="https://doi.org/10.5281/zenodo.23328817" target="_blank" rel="noopener noreferrer"><img src="https://zenodo.org/badge/DOI/10.5281/zenodo.23328817.svg" alt="DOI badge for the Open Spec Library"></a>
+      </div>
+
       <div class="spec-how" aria-label="How to use the Open Spec Library">
         <div><b>01</b><strong>Pick one spec</strong><p>Start with a block whose state you can still predict by hand.</p></div>
         <div><b>02</b><strong>Write the bench</strong><p>Create stimulus, monitors and an independent reference model in SystemVerilog.</p></div>
@@ -2019,6 +2037,14 @@ a_req_gets_grant:
       <div class="newsletter-copy"><h2 id="newsletter-inline-title">Want the next guide in your inbox?</h2><p>Like this? I send one short email a week with new guides, interview questions and specs to practise on. <span class="newsletter-free">Everything on SiliconDV stays free to read with or without signing up.</span> The email simply makes sure you do not miss what is new.</p></div>
       <div>
         <form class="newsletter-form" id="newsletter-inline-form" action="https://formsubmit.co/abiamra98@gmail.com" method="POST" target="newsletter-inline-response">
+        <input type="hidden" name="_autoresponse" value="Welcome to the SiliconDV weekly note.
+
+You will get one email a week: practical chip verification, what works in production and what fails, plus the occasional tool or guide I build for the community. No spam, ever. Unsubscribe anytime with one click.
+
+New here? Start with the guides: https://silicondv.com
+
+Glad you are here.
+Abinaya Senthil" />
           <input type="hidden" name="_subject" value="New SiliconDV newsletter signup" /><input type="hidden" name="_template" value="table" /><input type="hidden" name="_captcha" value="false" />
           <label for="newsletter-inline-email" class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">Email address</label>
           <input id="newsletter-inline-email" name="email" type="email" autocomplete="email" placeholder="you@example.com" required />
@@ -2036,6 +2062,14 @@ a_req_gets_grant:
     <h2 id="newsletter-slide-title">Like this guide?</h2>
     <p>I send one short email a week with new guides, interview questions and specs to practise on. Everything here stays free. The email just helps you catch the new stuff.</p>
     <form class="newsletter-form" id="newsletter-slide-form" action="https://formsubmit.co/abiamra98@gmail.com" method="POST" target="newsletter-slide-response">
+        <input type="hidden" name="_autoresponse" value="Welcome to the SiliconDV weekly note.
+
+You will get one email a week: practical chip verification, what works in production and what fails, plus the occasional tool or guide I build for the community. No spam, ever. Unsubscribe anytime with one click.
+
+New here? Start with the guides: https://silicondv.com
+
+Glad you are here.
+Abinaya Senthil" />
       <input type="hidden" name="_subject" value="New SiliconDV newsletter signup" /><input type="hidden" name="_template" value="table" /><input type="hidden" name="_captcha" value="false" />
       <label for="newsletter-slide-email" class="sr-only" style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)">Email address</label>
       <input id="newsletter-slide-email" name="email" type="email" autocomplete="email" placeholder="you@example.com" required />
