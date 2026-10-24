@@ -1059,6 +1059,7 @@
         <a href="#home" data-nav-page="home">Topics</a>
         <a href="#start" data-nav-page="start">Start here</a>
         <a href="#about" data-nav-page="about">About</a>
+        <a href="practice/">Practice Lab</a>
       </nav>
     </div>
   </header>
@@ -1212,6 +1213,11 @@ Abinaya Senthil" />
           <span class="topic-card-number">The person behind the notes</span><h2>About</h2>
           <p>Meet Abinaya and read why SiliconDV is built around intent, failure modes and evidence instead of definitions alone.</p>
           <span class="topic-card-action">Read the story</span>
+        </a>
+        <a class="topic-card" href="practice/" style="--card-number:'11'">
+          <span class="topic-card-number">Solve, check, download</span><h2>Practice Lab</h2>
+          <p>Work through 43 coding problems in SystemVerilog, assertions and UVM, and keep nine guides and cheat sheets that engineers actually use.</p>
+          <span class="topic-card-action">Enter the lab</span>
         </a>
         <a class="topic-card" href="#contact" style="--card-number:'10'">
           <span class="topic-card-number">Start a conversation</span><h2>Contact</h2>
@@ -1439,6 +1445,14 @@ Abinaya Senthil" />
           <p class="resource-takeaway"><strong>Keep:</strong> every hole should end with an owner and a reason, not merely a new test name.</p>
           <a href="#article-coverage">Run the triage</a>
         </article>
+        <article class="resource" data-topic="debug" data-search="debug triage first wrong cycle failure log waveform assertion divergence root cause">
+          <div class="resource-meta"><span>Debug</span><span>Triage method</span></div>
+          <h3>Find the first wrong cycle</h3>
+          <p>A failing log points at the last check that fired, not the first cycle that went wrong. Between the two, every signal is a consequence, and consequences make poor clues. This method sorts a failure by its earliest failing check, walks back to the first divergence, and names it in one sentence before any fix is attempted.</p>
+          <p class="resource-example"><strong>Try this:</strong> when three assertions fire in one run, ignore the loudest one. The failure with the smallest timestamp owns the investigation.</p>
+          <p class="resource-takeaway"><strong>Keep:</strong> debug from where it first broke quietly, not from where it broke loudly.</p>
+          <a href="#article-debug">Work through the method</a>
+        </article>
         <article class="resource" data-topic="debug" data-search="cdc clock domain crossing metastability synchronizer pulse fifo reconvergence">
           <div class="resource-meta"><span>CDC</span><span>Structures</span></div>
           <h3>Choose the crossing by information type</h3>
@@ -1446,6 +1460,22 @@ Abinaya Senthil" />
           <p class="resource-example"><strong>Try this:</strong> send a one cycle source pulse into a slower destination clock. If no destination edge sees the pulse, two flops cannot recover it. A toggle or handshake carries the event instead.</p>
           <p class="resource-takeaway"><strong>Keep:</strong> ask what information the destination must receive before choosing the circuit that crosses it.</p>
           <a href="#article-cdc">Compare crossings</a>
+        </article>
+        <article class="resource" data-topic="strategy" data-search="verification escapes bug silicon taxonomy spec stimulus checker waiver model triage root cause">
+          <div class="resource-meta"><span>Strategy</span><span>Escapes</span></div>
+          <h3>How bugs escape verification</h3>
+          <p>A bug that reaches silicon rarely slips past one person. It walks through a door: the specification, the stimulus, the checking, the waiver list, or the model. Sorting an escape by its door tells you what to fix. Fixing the wrong door feels productive and changes nothing.</p>
+          <p class="resource-example"><strong>Try this:</strong> take the last bug that surprised your team and name its door before anyone names a fix.</p>
+          <p class="resource-takeaway"><strong>Keep:</strong> an escape is a flow failure with a bug attached. Log the door, not just the bug.</p>
+          <a href="#article-escapes">Work through the five doors</a>
+        </article>
+        <article class="resource" data-topic="strategy" data-search="innovation dv technology ai formal verification emulation portable stimulus open source cocotb verilator chiplets ucie news">
+          <div class="resource-meta"><span>Strategy</span><span>Innovation</span></div>
+          <h3>Six technologies changing verification</h3>
+          <p>AI assistants, formal for everyone, emulation, portable stimulus, open source tools, and chiplets. The DV toolbox is being rebuilt. Here is what each one actually does, explained simply, and what it changes for the engineer who uses it.</p>
+          <p class="resource-example"><strong>Try this:</strong> pick one technology your team does not use yet and name the first small problem you would point it at.</p>
+          <p class="resource-takeaway"><strong>Keep:</strong> innovate where it removes clerical work, and keep your judgement for everything else.</p>
+          <a href="#article-innovation">Read the six technologies</a>
         </article>
       </div>
       <p class="empty" id="empty-state" hidden>No notes match that search. Try a shorter concept such as “reset”, “UVM” or “coverage”.</p>
@@ -1927,6 +1957,20 @@ a_req_gets_grant:
             <ul><li><strong>Stimulus hole:</strong> a legal scenario was never accepted. Adjust constraints or write a focused sequence.</li><li><strong>Observability hole:</strong> the scenario happened but the monitor or covergroup missed it.</li><li><strong>Model hole:</strong> the bin does not represent a real requirement. Repair the model.</li><li><strong>Unreachable hole:</strong> prove the condition cannot occur, then document the exclusion.</li><li><strong>Design hole:</strong> intended behavior cannot be reached because the RTL is wrong.</li><li><strong>Review question:</strong> would hitting this bin add evidence, or only improve the percentage?</li></ul>
           </div>
         </article>
+        <article class="article" id="article-debug">
+          <header class="article-heading"><strong>Debug triage: find the first wrong cycle</strong><span>DEBUG</span></header>
+          <div class="article-body">
+            <div class="reference-copy">
+              <p>When a test fails, the log points at the last check that fired. By then the design may have been wrong for hundreds of cycles. Everything after the first wrong cycle is a consequence, and consequences make poor clues, because they show the damage the original divergence caused rather than the divergence itself.</p>
+              <h4>A worked example</h4>
+              <p>Suppose a scoreboard reports wrong data at cycle 940 and two assertions fire at cycles 955 and 990. The instinct is to open the waveform at cycle 940. Instead, take the earliest failing check and walk backwards from it. Imagine the trace shows the grant still high at cycle 812, one cycle after the request dropped. The divergence sentence is: the grant stayed high one cycle after the request dropped. Everything at 940, 955 and 990 follows from that one extra cycle of grant. One sentence, one place to look, instead of three symptoms competing for attention.</p>
+              <h4>Where assistance helps and where it does not</h4>
+              <p>Tools, including AI assistants, are good at the clerical half of triage: clustering failures by the first check that fired, summarising long logs, and listing which tests share an earliest timestamp. They are not good at the judgement half: deciding which divergence came first in causal terms, or whether the checker or the design moved. Keep the clustering mechanical and the cause human.</p>
+              <p class="key-takeaway"><strong>Key takeaway:</strong> name the first divergence in one plain sentence before touching the fix. If the sentence cannot be written, the failure is not yet understood.</p>
+            </div>
+            <ol><li><strong>Sort by earliest failure:</strong> list every failing check in the run with its first timestamp. The smallest timestamp owns the investigation.</li><li><strong>Walk backwards:</strong> from that cycle, find the first cycle where the design and your expectation disagree. Not where the checker noticed. Where it actually diverged.</li><li><strong>Name it in one sentence:</strong> write the divergence as a single factual sentence about signals and cycles, with no theory inside it.</li><li><strong>Form one cause:</strong> propose a single explanation that would produce exactly that divergence, and say what else it predicts.</li><li><strong>Test with the smallest rerun:</strong> change one thing, rerun the smallest test that shows the failure, and watch whether the first wrong cycle moves, disappears or stays.</li><li><strong>Suspect the checker too:</strong> if the divergence sentence describes behaviour the specification allows, the bug may be in the expectation, not the design. Read the spec before editing either.</li><li><strong>Record the sentence:</strong> put the divergence sentence in the bug report or closure note. It is the shortest honest summary of the failure, and the next engineer will thank you for it.</li></ol>
+          </div>
+        </article>
         <article class="article" id="article-cdc">
           <header class="article-heading"><strong>CDC structure chooser</strong><span>CDC</span></header>
           <div class="article-body">
@@ -1937,6 +1981,61 @@ a_req_gets_grant:
               <p class="key-takeaway"><strong>Key takeaway:</strong> metastability, event loss, incoherent data and reconvergence are related but different failure modes.</p>
             </div>
             <ul><li><strong>Stable single bit level:</strong> use a multi flip flop synchronizer and verify the source stays stable long enough.</li><li><strong>Brief event:</strong> stretch, toggle or handshake so the destination cannot miss it.</li><li><strong>Multi bit control:</strong> preserve relationships between bits and analyze reconvergence.</li><li><strong>Ordered payload:</strong> use a handshake or asynchronous FIFO with control synchronized separately.</li><li><strong>Reset crossing:</strong> asynchronous assertion may be required, but deassertion must be controlled in each domain.</li><li><strong>Verification check:</strong> vary clock ratio and phase, then check for loss, duplication and reordering.</li></ul>
+          </div>
+        </article>
+        <article class="article" id="article-escapes">
+          <header class="article-heading"><strong>How bugs escape verification</strong><span>STRATEGY</span></header>
+          <div class="article-body">
+            <div class="reference-copy">
+              <p>Every team that tapes out has a story about the bug that reached silicon. I am never that interested in the bug. I am interested in the door it walked through. A bug that survives to silicon has usually had several chances to be caught, and those chances belong to different parts of the flow: the specification, the stimulus, the checking, the triage, and the model. When I look at an escape, I sort it into one of five doors before I look at the fix, because each door has a different fix, and fixing the wrong door feels productive while changing nothing.</p>
+              <h4>Door one: the spec never said it</h4>
+              <p>The requirement was missing, ambiguous, or read in two different ways by two teams, each of them faithfully. Suppose a register description says a status bit is cleared on reset. The design team reads reset as the power on reset. The verification team reads it as any reset, including the warm reset the software team uses every day. Both implementations agree with the sentence. The bug is in the sentence.</p>
+              <p>The smell is agreement everywhere except at the system level: the block is right, the test is right, and the chip still misbehaves. The countermeasure is to read the specification as an adversary. Every sentence that two engineers can read two ways becomes a written question to the architect, asked before the testplan is agreed, not after the failure.</p>
+              <h4>Door two: the stimulus never went there</h4>
+              <p>The design was exercised hard, just never in the one state where the bug lives. Random testing is good at common behaviour and poor at coincidences. Suppose a FIFO misbehaves only when a push and a pop arrive in the same cycle while it holds exactly one entry. Each condition alone is ordinary. Together they are rare, and a single constraint written to keep tests simple, one that quietly forbids simultaneous push and pop, removes the combination from the space entirely.</p>
+              <p>The smell is coverage that looks complete at the level of single bins while the crosses between bins were never a target. The countermeasure is to name the corners before trusting the random: write the directed test, or the covergroup cross, for every combination the design team mentions with the words that can never happen. Then read every constraint and ask what legal behaviour it forbids, and whether you truly want it forbidden.</p>
+              <h4>Door three: the check never looked</h4>
+              <p>The stimulus reached the bug, the design produced the wrong answer, and nothing complained. The scoreboard compared the data but not the order it arrived in. Or the assertion existed and passed every night because it was vacuous: its trigger never fired, so it checked nothing, politely, for months.</p>
+              <p>The smell is a test that cannot fail. The countermeasure is to prove that every important check can fail. Take a scratch copy of the design, break it on purpose, and watch the check fire. An assertion that has never failed has never really been tested, and a checker that has never caught anything is a decoration.</p>
+              <h4>Door four: the check fired and nobody listened</h4>
+              <p>This is the door nobody wants to own, because it is a process failure wearing a technical costume. The failure appeared in a regression, was labelled a known issue or blamed on the testbench, and was carried from one milestone to the next until it shipped. Nothing about the design hid it. The organisation filed it.</p>
+              <p>The smell is a waiver list that only grows, where entries have no owner and no date. The countermeasure is discipline, not tooling: every waived failure carries a name, a reason, and an expiry, and a waiver that survives two milestones is reviewed again as if it were a new bug, because by then it is one.</p>
+              <h4>Door five: the environment lied</h4>
+              <p>The reference model shared the design team's misunderstanding, so the design and the model were wrong in the same way and every comparison passed. Or the testbench treated the hardware more kindly than silicon will: resets released too cleanly, unknown values resolved optimistically, a clock crossing exercised only at a friendly ratio.</p>
+              <p>The smell is perfect agreement, early, between a model and a design that were both written from the same reading of the same document. The countermeasure is independence. Build the model from the specification text, not from the RTL and not from the designer's slides, and treat a long run of perfect agreement at the start of a project as a warning rather than a comfort. Models earn trust by disagreeing sometimes and being right.</p>
+              <h4>Keep an escape log</h4>
+              <p>When a bug escapes, write down the door, not only the bug. Across one project the log starts to show a pattern, and the pattern is almost never that we need more tests. It is one door, opened again and again by the same habit. Fix that habit and the next project starts stronger than the last one did.</p>
+              <p class="key-takeaway"><strong>Key takeaway:</strong> an escape is a flow failure with a bug attached. Every escape should leave two things behind: a regression test that would have caught it, and one line on the checklist the team actually reads.</p>
+            </div>
+          </div>
+        </article>
+        <article class="article" id="article-innovation">
+          <header class="article-heading"><strong>Innovation in DV: six technologies changing how chips get verified</strong><span>INNOVATION</span></header>
+          <div class="article-body">
+            <div class="reference-copy">
+              <p>Chips keep getting bigger and schedules do not. So the interesting question in verification is no longer who can write the most tests. It is which new methods actually hold up on real projects. These are the six technologies I see changing daily DV work, explained the simple way I would explain them to a colleague who asked me what is new.</p>
+              <h4>1. AI assistants in the testbench</h4>
+              <p>The simple version: a language model reads your code, your specification, and your logs, and drafts the clerical parts of the job. A first version of a driver. An assertion for a behaviour you describe in words. A summary of a failure log that runs to thousands of lines. Machine learning also works quietly inside regressions, learning which tests have historically caught bugs and running those first.</p>
+              <p>What it changes: the sorting and drafting get faster, the judgement does not move. The model does not know your design intent, and it will hand you a confident wrong answer if you let it. The engineers getting real value treat it as a fast junior colleague whose work always gets reviewed.</p>
+              <h4>2. Formal verification for everyone</h4>
+              <p>The simple version: instead of writing tests and hoping one of them reaches the bug, you state a rule, this FIFO never overflows, and a solver proves the rule for every possible input, or hands you the one sequence that breaks it.</p>
+              <p>What it changes: formal used to belong to specialists. Packaged formal apps now check the common problems, clock crossings, register behaviour, connectivity, stuck states, with far less setup, so ordinary block teams run them as routine. Formal proves small control heavy blocks and rare corners that random testing reaches slowly. It complements simulation. It does not replace it.</p>
+              <h4>3. Emulation: running the chip before it exists</h4>
+              <p>The simple version: the design is mapped onto special hardware and run there, fast enough to boot software and execute real workloads long before tapeout, work that would take a simulator an unreasonable time.</p>
+              <p>What it changes: the bugs that only appear after millions of cycles become findable: firmware interacting with hardware, long packet streams, power state sequences. In most companies emulation time is a shared and scarce resource, so teams plan it the way they plan anything precious, and the planning itself improves the tests.</p>
+              <h4>4. Portable stimulus: write the scenario once</h4>
+              <p>The simple version: a standard from Accellera lets you describe what a test should achieve at a high level, as a scenario, and then generate the real test for simulation, for emulation, or for silicon from that one description.</p>
+              <p>What it changes: today the same scenario is rewritten at block level, again at chip level, and again on silicon, and the three versions quietly drift apart. Portable stimulus carries the intent across all three, so system level coverage connects back to the block level work instead of starting over.</p>
+              <h4>5. Open source tools grew up</h4>
+              <p>The simple version: Verilator compiles a design into a fast software model. cocotb lets you write a testbench in Python. Both are free, both are used on real projects, and both are good enough that the licence budget is no longer the gate it was.</p>
+              <p>What it changes: students and small teams can build a serious flow from nothing, and large teams use these tools for fast checks and experiments outside the main flow. It is also how a generation of engineers is learning verification in public, sharing testbenches the way software engineers share code.</p>
+              <h4>6. Chiplets changed the unit of verification</h4>
+              <p>The simple version: instead of one large die, companies now combine several smaller dies, called chiplets, in a single package, connected by standard links such as UCIe.</p>
+              <p>What it changes: verification must now prove that dies from different teams, sometimes different companies, behave together: the interconnect, the power behaviour, and the error handling when one die misbehaves. The block level skills stay exactly the same. The system level questions multiply.</p>
+              <h4>The pattern underneath</h4>
+              <p>Look at the six together and one pattern shows. Verification is moving from writing more tests to aiming the tests better. Formal aims by proof. AI aims by sorting and drafting. Emulation runs the long scenarios simulation cannot. Portable stimulus carries the aim from one stage to the next. The tools keep changing. The judgement about what to aim at stays yours.</p>
+              <p class="key-takeaway"><strong>Key takeaway:</strong> innovation in DV is not one tool. It is a shift: prove what you can prove, automate the clerical work, run the long scenarios on hardware, and spend your own hours on the judgement calls none of these tools can make.</p>
+            </div>
           </div>
         </article>
       </div>
