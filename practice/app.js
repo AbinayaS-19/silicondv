@@ -828,7 +828,7 @@
     DATA.materials.forEach(function (m) {
       var dl;
       if (DEMO) {
-        dl = '<a class="btn btn-ghost" href="https://github.com/AbinayaS-19/silicondv/releases/download/practice-materials-v1/' + esc(m.file) + '">Download</a>';
+        dl = '<a class="btn btn-ghost" href="https://github.com/AbinayaS-19/silicondv/releases/download/practice-materials-v1/' + esc(m.file.replace(/\.md$/, '.pdf')) + '">Download PDF</a>';
       } else {
         dl = '<button class="btn btn-ghost" type="button" data-dl="' + esc(m.id) + '" data-file="' + esc(m.file) + '">Download</button>';
       }
